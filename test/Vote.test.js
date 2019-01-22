@@ -91,6 +91,15 @@ contract('Vote', accounts => {
         expect(newCandidate['1']).to.equal('Second Candidate');
         expect(newCandidate['2'].toNumber()).to.equal(0);
       });
+      it('only allows election creator to add new candidates', async () => {
+        await instance.addNewCandidate(1, 'Third Candidate', {
+          from: accounts[1]
+        });
+        const newBadCandidate = await instance.getCandidate(3);
+        expect(newBadCandidate['0'].toNumber()).to.equal(0);
+        expect(newBadCandidate['1']).to.equal('');
+        expect(newBadCandidate['2'].toNumber()).to.equal(0);
+      });
     });
     //   describe('voteForCandidate', () => {
     //     it('tansfers the token back to the owner', async () => {
