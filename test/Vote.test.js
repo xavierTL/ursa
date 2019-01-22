@@ -57,32 +57,32 @@ contract('Vote', accounts => {
         expect(electionCandidate['2'].toNumber()).to.equal(0);
       });
     });
-    //   describe('getWhiteList', () => {
-    //     it('returns an array of addresses of the eligable voters', async () => {
-    //       const whiteList = await instance.getWhiteList(1);
-    //       expect(whiteList[0]).to.equal(accounts[1]);
-    //       expect(whiteList[1]).to.equal(accounts[2]);
-    //       expect(whiteList[2]).to.equal(accounts[3]);
-    //     });
-    //   });
-    //   describe('mint', () => {
-    //     it('mints the appropriate number of tokens', async () => {
-    //       const tokenSupply = await instance.totalSupply();
-    //       expect(tokenSupply.toNumber()).to.equal(3);
-    //     });
-    //   });
-    //   describe('distributeToken', () => {
-    //     it('gives the supply of tokens to the correct accounts', async () => {
-    //       let balance = await instance.balanceOf(accounts[0]);
-    //       expect(balance.toNumber()).to.equal(0);
-    //       balance = await instance.balanceOf(accounts[1]);
-    //       expect(balance.toNumber()).to.equal(1);
-    //       balance = await instance.balanceOf(accounts[2]);
-    //       expect(balance.toNumber()).to.equal(1);
-    //       balance = await instance.balanceOf(accounts[3]);
-    //       expect(balance.toNumber()).to.equal(1);
-    //     });
-    //   });
+    describe('getWhiteList', () => {
+      it('returns an array of addresses of the eligable voters', async () => {
+        const whiteList = await instance.getWhiteList(1);
+        expect(whiteList[0]).to.equal(accounts[1]);
+        expect(whiteList[1]).to.equal(accounts[2]);
+        expect(whiteList[2]).to.equal(accounts[3]);
+      });
+    });
+    describe('mint', () => {
+      it('mints the appropriate number of tokens', async () => {
+        const tokenSupply = await instance.totalSupply();
+        expect(tokenSupply.toNumber()).to.equal(3);
+      });
+    });
+    describe('distributeToken', () => {
+      it('gives the supply of tokens to the correct accounts', async () => {
+        let balance = await instance.balanceOf(accounts[0]);
+        expect(balance.toNumber()).to.equal(0);
+        balance = await instance.balanceOf(accounts[1]);
+        expect(balance.toNumber()).to.equal(1);
+        balance = await instance.balanceOf(accounts[2]);
+        expect(balance.toNumber()).to.equal(1);
+        balance = await instance.balanceOf(accounts[3]);
+        expect(balance.toNumber()).to.equal(1);
+      });
+    });
     //   describe('voteForCandidate', () => {
     //     it('tansfers the token back to the owner', async () => {
     //       let balance = await instance.balanceOf(accounts[1]);

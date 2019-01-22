@@ -48,6 +48,18 @@ contract Vote is ERC20 {
         return elections[i].candidateData;
     }
 
+    function addNewCandidate(uint electionId, string newCandidateName) public view returns (uint, string memory, uint) {
+        candidatesCount++;
+        candidateIds.push(candidatesCount);
+        candidateStorage[candidatesCount] = Candidate(
+            candidatesCount,
+            newCandidateName,
+            0
+            );
+        elections[electionId].candidateData.push(candidatesCount);
+        return (candidateStorage[candidatesCount].id, candidateStorage[candidatesCount].name, candidateStorage[candidatesCount].voteCount);
+    }
+
     function getWhiteList(uint i) public view returns (address[] memory){
         return elections[i].whiteList;
     }
