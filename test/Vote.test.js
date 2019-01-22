@@ -84,21 +84,37 @@ contract('Vote', accounts => {
       });
     });
     describe('addNewCandidate', () => {
-      it('adds correct data to election', async () => {
+      it('adds correct candidate data to election', async () => {
         await instance.addNewCandidate(1, 'Second Candidate');
         const newCandidate = await instance.getCandidate(2);
         expect(newCandidate['0'].toNumber()).to.equal(2);
         expect(newCandidate['1']).to.equal('Second Candidate');
         expect(newCandidate['2'].toNumber()).to.equal(0);
       });
+      it('updates candidate count accordingly', async () => {
+        const updatedElectionCandidates = await instance.getElectionCandidates(
+          1
+        );
+        expect(updatedElectionCandidates.length).to.eql(2);
+      });
       it('only allows election creator to add new candidates', async () => {
-        await instance.addNewCandidate(1, 'Third Candidate', {
-          from: accounts[1]
-        });
+        try {
+          await instance.addNewCandidate(1, 'Third Candidate', {
+            from: accounts[1]
+          });
+        } catch (error) {
+          expect(error.reason).to.eql(
+            'Only admin can add candidates to this election.'
+          );
+        }
         const newBadCandidate = await instance.getCandidate(3);
+        const updatedElectionCandidates = await instance.getElectionCandidates(
+          1
+        );
         expect(newBadCandidate['0'].toNumber()).to.equal(0);
         expect(newBadCandidate['1']).to.equal('');
         expect(newBadCandidate['2'].toNumber()).to.equal(0);
+        expect(updatedElectionCandidates.length).to.eql(2);
       });
     });
     //   describe('voteForCandidate', () => {

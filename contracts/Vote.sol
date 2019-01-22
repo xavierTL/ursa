@@ -48,24 +48,24 @@ contract Vote is ERC20 {
         return elections[i].candidateData;
     }
 
-    function addNewCandidate(uint electionId, string memory newCandidateName) public  returns (string memory) {
-        if(msg.sender == elections[electionId].creator){
-            candidatesCount++;
-            candidateIds.push(candidatesCount);
-            candidateStorage[candidatesCount] = Candidate(
-                candidatesCount,
-                newCandidateName,
-                0
-                );
-            elections[electionId].candidateData.push(candidatesCount);
-            return "success";
-            } else if (msg.sender != elections[electionId].creator){
-                return "not authorised";
-            }
+    function addNewCandidate(uint electionId, string memory newCandidateName) public   {
+        require(msg.sender == elections[electionId].creator, "Only admin can add candidates to this election.");
+        candidatesCount++;
+        candidateIds.push(candidatesCount);
+        candidateStorage[candidatesCount] = Candidate(
+            candidatesCount,
+            newCandidateName,
+            0
+            );
+        elections[electionId].candidateData.push(candidatesCount);
     }
 
     function getWhiteList(uint i) public view returns (address[] memory){
         return elections[i].whiteList;
+    }
+
+    function addToWhiteList(uint i, address voter) public {
+
     }
 
     function getCandidate(uint _id) public view returns (uint, string memory, uint) {
