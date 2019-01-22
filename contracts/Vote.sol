@@ -27,7 +27,7 @@ contract Vote is ERC20 {
         uint start = setTimer(_startTime);
         uint end = setTimer(_endTime);
         mint(_whiteList.length);
-        elections[electionCount] = Election(msg.sender, _electionName, start, end, _whiteList.length, new uint[](0), new address[](0));
+        elections[electionCount] = Election(msg.sender, _electionName, start, end, 1, new uint[](0), new address[](0));
         candidatesCount++;
         candidateIds.push(candidatesCount);
         candidateStorage[candidatesCount] = Candidate(
@@ -52,7 +52,7 @@ contract Vote is ERC20 {
         return elections[i].whiteList;
     }
 
-    function getCandidate(uint _id) public view returns (uint, string, uint) {
+    function getCandidate(uint _id) public view returns (uint, string memory, uint) {
         return (candidateStorage[_id].id, candidateStorage[_id].name, candidateStorage[_id].voteCount);
     }
 
