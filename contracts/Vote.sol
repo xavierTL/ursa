@@ -11,7 +11,6 @@ contract Vote is ERC20 {
         string electionName;
         uint startTime;
         uint endTime;
-        uint candidatesCount;
         uint[] candidateData;
         address[] whiteList;
     }
@@ -27,7 +26,7 @@ contract Vote is ERC20 {
         uint start = setTimer(_startTime);
         uint end = setTimer(_endTime);
         mint(_whiteList.length);
-        elections[electionCount] = Election(msg.sender, _electionName, start, end, 1, new uint[](0), new address[](0));
+        elections[electionCount] = Election(msg.sender, _electionName, start, end, new uint[](0), new address[](0));
         candidatesCount++;
         candidateIds.push(candidatesCount);
         candidateStorage[candidatesCount] = Candidate(
@@ -60,12 +59,15 @@ contract Vote is ERC20 {
         elections[electionId].candidateData.push(candidatesCount);
     }
 
-    function getWhiteList(uint i) public view returns (address[] memory){
-        return elections[i].whiteList;
+    function getWhiteList(uint electionId) public view returns (address[] memory){
+        return elections[electionId].whiteList;
     }
 
-    function addToWhiteList(uint i, address voter) public {
-
+    function addToWhitelist(uint electionId, address voter) public {
+        require(msg.sender == elections[electionId].creator, "Only admin can add voters to this election's whitelist.");
+        elections[electionId].whiteList.push(voter);
+        mint(1);
+        distributeToken(voter);
     }
 
     function getCandidate(uint _id) public view returns (uint, string memory, uint) {
