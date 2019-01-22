@@ -48,7 +48,7 @@ contract Vote is ERC20 {
         return elections[i].candidateData;
     }
 
-    function addNewCandidate(uint electionId, string newCandidateName) public view returns (uint, string memory, uint) {
+    function addNewCandidate(uint electionId, string memory newCandidateName) public  returns (uint, string memory, uint) {
         candidatesCount++;
         candidateIds.push(candidatesCount);
         candidateStorage[candidatesCount] = Candidate(

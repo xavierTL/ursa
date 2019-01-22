@@ -83,6 +83,15 @@ contract('Vote', accounts => {
         expect(balance.toNumber()).to.equal(1);
       });
     });
+    describe('addNewCandidate', () => {
+      it('adds correct data to election', async () => {
+        await instance.addNewCandidate(1, 'Second Candidate');
+        const newCandidate = await instance.getCandidate(2);
+        expect(newCandidate['0'].toNumber()).to.equal(2);
+        expect(newCandidate['1']).to.equal('Second Candidate');
+        expect(newCandidate['2'].toNumber()).to.equal(0);
+      });
+    });
     //   describe('voteForCandidate', () => {
     //     it('tansfers the token back to the owner', async () => {
     //       let balance = await instance.balanceOf(accounts[1]);
