@@ -88,6 +88,21 @@ contract Vote is ERC20 {
     //     }
     // }
 
+    function voteForCandidate(uint _id, uint _electionId) public returns (uint, string memory, uint) {
+        require(elections[_electionId].endTime > block.timestamp, "The election has already ended.");
+        require(elections[_electionId].startTime < block.timestamp, "The election has not started yet.");
+        address[] memory array = getWhiteList(_electionId);
+        for (uint i = 0; i < array.length ; i++) {
+            if(array[i] == msg.sender) {
+                if(transfer(elections[_electionId].creator, 1)) {
+                    candidateStorage[_id].voteCount++;
+                    return (candidateStorage[_id].id, candidateStorage[_id].name, candidateStorage[_id].voteCount);
+                }
+            }
+        }
+    }
+    
+
     struct Candidate  {
         uint id;
         string name;
