@@ -20,7 +20,7 @@ contract('ElectionManager', accounts => {
   describe('startElection', () => {
     it('contract successfully compiles', async () => {
       const smokeTest = await instance.smokeTest();
-      expect(smokeTest).to.eql('smokeTest');
+      expect(smokeTest).to.eql('its working nicely');
     });
     it('intitlizes an election with the correct values', async () => {
       const testElection = await instance.elections(1);
