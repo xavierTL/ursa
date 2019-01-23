@@ -25,7 +25,6 @@ contract Vote is ERC20 {
         electionCount++;
         uint start = setTimer(_startTime);
         uint end = setTimer(_endTime);
-        mint(_whiteList.length);
         elections[electionCount] = Election(msg.sender, _electionName, start, end, new uint[](0), new address[](0));
         candidatesCount++;
         candidateIds.push(candidatesCount);
@@ -37,8 +36,7 @@ contract Vote is ERC20 {
         elections[electionCount].candidateData.push(candidatesCount);
 
         for (uint j = 0; j < _whiteList.length ; j++){
-            elections[electionCount].whiteList.push(_whiteList[j]);
-            distributeToken(_whiteList[j]);
+            registerVoter(electionCount, _whiteList[j]);
         }
         return electionCount;
     }
@@ -63,9 +61,9 @@ contract Vote is ERC20 {
         return elections[electionId].whiteList;
     }
 
-    function addToWhitelist(uint electionId, address voter) public {
+    function registerVoter(uint electionId, address voter) public {
         require(msg.sender == elections[electionId].creator, "Only admin can add voters to this election's whitelist.");
-        require(elections[electionId].startTime > block.timestamp, "New voters must be added prior to start time.");
+        require(elections[electionId].startTime >= block.timestamp, "New voters must be added prior to start time.");
         elections[electionId].whiteList.push(voter);
         mint(1);
         distributeToken(voter);

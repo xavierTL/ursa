@@ -169,7 +169,7 @@ contract('Vote', accounts => {
     });
   });
 
-  describe('addToWhitelist', () => {
+  describe('registerVoter', () => {
     it('adds voter address to election whitelist', async () => {
       await instance.startElection(
         'Test Election Four',
@@ -178,7 +178,7 @@ contract('Vote', accounts => {
         'Candidate Chris',
         [accounts[1], accounts[2], accounts[3]]
       );
-      await instance.addToWhitelist(4, accounts[4]);
+      await instance.registerVoter(4, accounts[4]);
       const whiteList = await instance.getWhiteList(4);
       expect(whiteList.length).to.eql(4);
       expect(whiteList[3]).to.eql(accounts[4]);
@@ -189,7 +189,7 @@ contract('Vote', accounts => {
     });
     it('only allows election creator to add new voter addresses to whitelist', async () => {
       try {
-        await instance.addToWhitelist(1, accounts[5], {
+        await instance.registerVoter(1, accounts[5], {
           from: accounts[1]
         });
       } catch (error) {
@@ -207,7 +207,7 @@ contract('Vote', accounts => {
         [accounts[1], accounts[2], accounts[3]]
       );
       try {
-        await instance.addToWhitelist(5, accounts[4]);
+        await instance.registerVoter(5, accounts[4]);
       } catch (error) {
         expect(error.reason).to.eql(
           'New voters must be added prior to start time.'
