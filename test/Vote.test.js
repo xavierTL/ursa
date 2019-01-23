@@ -6,6 +6,7 @@ contract('Vote', accounts => {
 
   before(async () => {
     instance = await Vote.deployed();
+
     await instance.startElection(
       'Test Election',
       0,
@@ -15,6 +16,7 @@ contract('Vote', accounts => {
     );
     electionCandidates = await instance.getElectionCandidates(1);
   });
+
   describe('startElection', () => {
     it('contract successfully compiles', async () => {
       const smokeTest = await instance.smokeTest();
@@ -33,13 +35,18 @@ contract('Vote', accounts => {
         'startTime',
         'endTime'
       ]);
-      const startTime = await instance.setTimer(20000);
+      const startTime = await instance.setTimer(0);
       const endTime = await instance.setTimer(100000);
 
       expect(testElection.creator).to.equal(accounts[0]);
       expect(testElection.electionName).to.equal('Test Election');
-      expect(testElection.startTime.toNumber()).to.equal(startTime.toNumber());
-      expect(testElection.endTime.toNumber()).to.equal(endTime.toNumber());
+      // given time tests 10 seconds of variation to accomodate block mining time.
+      expect(Math.floor(testElection.startTime.toNumber() / 10)).to.equal(
+        Math.floor(startTime.toNumber() / 10)
+      );
+      expect(Math.floor(testElection.endTime.toNumber() / 10)).to.equal(
+        Math.floor(endTime.toNumber() / 10)
+      );
     });
     describe('getElectionCandidates', () => {
       it('returns an array containing the candidates id for a particular election', async () => {
@@ -81,6 +88,7 @@ contract('Vote', accounts => {
       });
     });
   });
+
   describe('addNewCandidate', () => {
     it('adds correct candidate data to election', async () => {
       await instance.addNewCandidate(1, 'Second Candidate');
@@ -111,29 +119,7 @@ contract('Vote', accounts => {
       expect(updatedElectionCandidates.length).to.eql(2);
     });
   });
-  describe('addToWhitelist', () => {
-    it('adds voter address to election whitelist', async () => {
-      await instance.addToWhitelist(1, accounts[4]);
-      const whiteList = await instance.getWhiteList(1);
-      expect(whiteList.length).to.eql(4);
-      expect(whiteList[3]).to.eql(accounts[4]);
-    });
-    it('provides that voter with one token', async () => {
-      const balance = await instance.balanceOf(accounts[4]);
-      expect(balance.toNumber()).to.equal(1);
-    });
-    it('only allows election creator to add new voter addresses to whitelist', async () => {
-      try {
-        await instance.addToWhitelist(1, accounts[5], {
-          from: accounts[1]
-        });
-      } catch (error) {
-        expect(error.reason).to.eql(
-          "Only admin can add voters to this election's whitelist."
-        );
-      }
-    });
-  });
+
   describe('voteForCandidate', () => {
     it('tansfers the token back to the owner', async () => {
       let balance = await instance.balanceOf(accounts[1]);
@@ -179,6 +165,53 @@ contract('Vote', accounts => {
         await instance.voteForCandidate(1, 3, { from: accounts[1] });
       } catch (error) {
         expect(error.reason).to.eql('The election has not started yet.');
+      }
+    });
+  });
+
+  describe('addToWhitelist', () => {
+    it('adds voter address to election whitelist', async () => {
+      await instance.startElection(
+        'Test Election Four',
+        300,
+        800,
+        'Candidate Chris',
+        [accounts[1], accounts[2], accounts[3]]
+      );
+      await instance.addToWhitelist(4, accounts[4]);
+      const whiteList = await instance.getWhiteList(4);
+      expect(whiteList.length).to.eql(4);
+      expect(whiteList[3]).to.eql(accounts[4]);
+    });
+    it('provides that voter with one token', async () => {
+      const balance = await instance.balanceOf(accounts[4]);
+      expect(balance.toNumber()).to.equal(1);
+    });
+    it('only allows election creator to add new voter addresses to whitelist', async () => {
+      try {
+        await instance.addToWhitelist(1, accounts[5], {
+          from: accounts[1]
+        });
+      } catch (error) {
+        expect(error.reason).to.eql(
+          "Only admin can add voters to this election's whitelist."
+        );
+      }
+    });
+    it('voters cannot be added after start time', async () => {
+      await instance.startElection(
+        'Test Election Five',
+        0,
+        800,
+        'Candidate Ciara',
+        [accounts[1], accounts[2], accounts[3]]
+      );
+      try {
+        await instance.addToWhitelist(5, accounts[4]);
+      } catch (error) {
+        expect(error.reason).to.eql(
+          'New voters must be added prior to start time.'
+        );
       }
     });
   });

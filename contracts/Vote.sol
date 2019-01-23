@@ -65,6 +65,7 @@ contract Vote is ERC20 {
 
     function addToWhitelist(uint electionId, address voter) public {
         require(msg.sender == elections[electionId].creator, "Only admin can add voters to this election's whitelist.");
+        require(elections[electionId].startTime > block.timestamp, "New voters must be added prior to start time.");
         elections[electionId].whiteList.push(voter);
         mint(1);
         distributeToken(voter);
@@ -73,20 +74,6 @@ contract Vote is ERC20 {
     function getCandidate(uint _id) public view returns (uint, string memory, uint) {
         return (candidateStorage[_id].id, candidateStorage[_id].name, candidateStorage[_id].voteCount);
     }
-
-    // function voteForCandidate(uint _id, uint _electionCount) public returns (uint, bytes32, uint) {
-    //     if(elections[_electionCount].expirationTime > block.timestamp) {
-    //         address[] memory array = getWhiteList(_electionCount);
-    //         for (uint i = 0; i < array.length ; i++) {
-    //             if(array[i] == msg.sender) {
-    //                 if(transfer(elections[_electionCount].creator, 1)) {
-    //                     candidateStorage[_id].voteCount++;
-    //                     return (candidateStorage[_id].id, candidateStorage[_id].name, candidateStorage[_id].voteCount);
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
 
     function voteForCandidate(uint _id, uint _electionId) public returns (uint, string memory, uint) {
         require(elections[_electionId].endTime > block.timestamp, "The election has already ended.");
