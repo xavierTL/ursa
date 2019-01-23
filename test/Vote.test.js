@@ -1,11 +1,11 @@
-const Vote = artifacts.require('./Vote.sol');
+const ElectionManager = artifacts.require('./ElectionManager.sol');
 
-contract('Vote', accounts => {
+contract('ElectionManager', accounts => {
   let instance;
   let electionCandidates;
 
   before(async () => {
-    instance = await Vote.deployed();
+    instance = await ElectionManager.deployed();
 
     await instance.startElection(
       'Test Election',
@@ -61,9 +61,9 @@ contract('Vote', accounts => {
         expect(electionCandidate['2'].toNumber()).to.equal(0);
       });
     });
-    describe('getWhiteList', () => {
+    describe('getRegistry', () => {
       it('returns an array of addresses of the eligable voters', async () => {
-        const whiteList = await instance.getWhiteList(1);
+        const whiteList = await instance.getRegistry(1);
         expect(whiteList[0]).to.equal(accounts[1]);
         expect(whiteList[1]).to.equal(accounts[2]);
         expect(whiteList[2]).to.equal(accounts[3]);
@@ -179,7 +179,7 @@ contract('Vote', accounts => {
         [accounts[1], accounts[2], accounts[3]]
       );
       await instance.registerVoter(4, accounts[4]);
-      const whiteList = await instance.getWhiteList(4);
+      const whiteList = await instance.getRegistry(4);
       expect(whiteList.length).to.eql(4);
       expect(whiteList[3]).to.eql(accounts[4]);
     });

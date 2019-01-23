@@ -2,7 +2,7 @@ pragma solidity ^0.5.0;
 
 import "../node_modules/openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 
-contract Vote is ERC20 {
+contract ElectionManager is ERC20 {
 
     string public smokeTest = "smokeTest";
 
@@ -13,6 +13,12 @@ contract Vote is ERC20 {
         uint endTime;
         uint[] candidateData;
         address[] whiteList;
+    }
+
+    struct Candidate  {
+        uint id;
+        string name;
+        uint voteCount;
     }
 
     uint public electionCount;
@@ -45,6 +51,10 @@ contract Vote is ERC20 {
         return elections[i].candidateData;
     }
 
+    function getCandidate(uint _id) public view returns (uint, string memory, uint) {
+        return (candidateStorage[_id].id, candidateStorage[_id].name, candidateStorage[_id].voteCount);
+    }
+
     function addNewCandidate(uint electionId, string memory newCandidateName) public   {
         require(msg.sender == elections[electionId].creator, "Only admin can add candidates to this election.");
         candidatesCount++;
@@ -57,26 +67,10 @@ contract Vote is ERC20 {
         elections[electionId].candidateData.push(candidatesCount);
     }
 
-    function getWhiteList(uint electionId) public view returns (address[] memory){
-        return elections[electionId].whiteList;
-    }
-
-    function registerVoter(uint electionId, address voter) public {
-        require(msg.sender == elections[electionId].creator, "Only admin can add voters to this election's whitelist.");
-        require(elections[electionId].startTime >= block.timestamp, "New voters must be added prior to start time.");
-        elections[electionId].whiteList.push(voter);
-        mint(1);
-        distributeToken(voter);
-    }
-
-    function getCandidate(uint _id) public view returns (uint, string memory, uint) {
-        return (candidateStorage[_id].id, candidateStorage[_id].name, candidateStorage[_id].voteCount);
-    }
-
     function voteForCandidate(uint _id, uint _electionId) public returns (uint, string memory, uint) {
         require(elections[_electionId].endTime > block.timestamp, "The election has already ended.");
         require(elections[_electionId].startTime < block.timestamp, "The election has not started yet.");
-        address[] memory array = getWhiteList(_electionId);
+        address[] memory array = getRegistry(_electionId);
         for (uint i = 0; i < array.length ; i++) {
             if(array[i] == msg.sender) {
                 if(transfer(elections[_electionId].creator, 1)) {
@@ -86,12 +80,17 @@ contract Vote is ERC20 {
             }
         }
     }
-    
 
-    struct Candidate  {
-        uint id;
-        string name;
-        uint voteCount;
+    function getRegistry(uint electionId) public view returns (address[] memory){
+        return elections[electionId].whiteList;
+    }
+    
+    function registerVoter(uint electionId, address voter) public {
+        require(msg.sender == elections[electionId].creator, "Only admin can add voters to this election's whitelist.");
+        require(elections[electionId].startTime >= block.timestamp, "New voters must be added prior to start time.");
+        elections[electionId].whiteList.push(voter);
+        mint(1);
+        distributeToken(voter);
     }
 
     function setTimer(uint _voteLength) public view returns (uint) {
