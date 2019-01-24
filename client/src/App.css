@@ -15,10 +15,14 @@
   flex: 6;
   display: flex;
   flex-direction: column;
+  overflow: scroll;
 }
 
-.loading-icon {
+.icon {
   width: 90px;
+}
+
+.spin {
   animation: logo-spin infinite 40s linear;
 }
 
@@ -33,4 +37,18 @@
 
 .nav-bar {
   /* background-color: #ff0079; */
+}
+
+.carousel-cont {
+  border: solid red 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.carousel-text {
+  color: black;
+}
+.instruction-carousel {
+  height: 150px;
 }
