@@ -13,6 +13,8 @@
 
 .main-cont {
   flex: 6;
+  display: flex;
+  flex-direction: column;
 }
 
 .loading-icon {

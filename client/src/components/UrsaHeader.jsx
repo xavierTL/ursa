@@ -1,4 +1,4 @@
-import { Navbar } from 'react-bootstrap';
+import { Navbar, Nav, NavItem } from 'react-bootstrap';
 import React, { Component } from 'react';
 import '../App.css';
 
@@ -13,6 +13,14 @@ class UrsaHeader extends Component {
           </Navbar.Brand>
           <Navbar.Toggle />
         </Navbar.Header>
+        <Nav>
+          <NavItem eventKey={1} href="#">
+            New Election
+          </NavItem>
+          <NavItem eventKey={2} href="#">
+            Elections
+          </NavItem>
+        </Nav>
         <Navbar.Collapse>
           <Navbar.Text pullRight>{`user: ${user}`}</Navbar.Text>
         </Navbar.Collapse>
