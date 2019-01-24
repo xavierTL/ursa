@@ -13,6 +13,7 @@ class App extends Component {
   };
   render() {
     const { user, loading } = this.state;
+    const { drizzle } = this.props;
     return (
       <div className="App">
         <Top />
@@ -21,7 +22,7 @@ class App extends Component {
             <>
               <UrsaHeader user={user} />
               <Router>
-                <ElectionBuilder path="new-election" />
+                <ElectionBuilder path="new-election" drizzle={drizzle} />
               </Router>
             </>
           )}
