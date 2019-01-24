@@ -40,17 +40,21 @@ class NewElectionForm extends Component {
             <FormControl.Feedback />
             <HelpBlock>Must be at least 10 characters.</HelpBlock>
           </FormGroup>
-          Start time:
-          <DateTimePicker
-            onChange={this.startChange}
-            value={this.state.startDate}
-          />
-          End time:
-          <DateTimePicker
-            onChange={this.endChange}
-            value={this.state.endDate}
-          />
-          <Button>SET</Button>
+          <FormGroup validationState={this.getStartTimeValidationState()}>
+            <ControlLabel>Start time:</ControlLabel>
+            <DateTimePicker
+              onChange={this.startChange}
+              value={this.state.startDate}
+            />
+          </FormGroup>
+          <FormGroup validationState={this.getEndTimeValidationState()}>
+            <ControlLabel>End time:</ControlLabel>
+            <DateTimePicker
+              onChange={this.endChange}
+              value={this.state.endDate}
+            />
+            <Button onClick={() => this.setTimes()}>Set Dates</Button>
+          </FormGroup>
         </form>
       </div>
     );
@@ -71,18 +75,32 @@ class NewElectionForm extends Component {
     });
   };
 
-  getValidationState(data) {
+  getValidationState = data => {
     const length = this.state[data].length;
     return length > 10 ? 'success' : 'warning';
-  }
+  };
 
   startChange = date => {
-    console.log(date);
     this.setState({ startDate: date });
   };
+
+  getStartTimeValidationState = () => {
+    const { startDate } = this.state;
+    return 'warning';
+  };
+
   endChange = date => {
-    console.log(date);
     this.setState({ endDate: date });
+  };
+
+  getEndTimeValidationState = () => {
+    const { endDate } = this.state;
+    return 'warning';
+  };
+
+  setTimes = () => {
+    const { timesDone } = this.state;
+    this.setState({ timesDone: !timesDone });
   };
 }
 

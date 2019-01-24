@@ -6,7 +6,7 @@ import NewElectionForm from './NewElectionForm';
 class ElectionBuilder extends Component {
   state = {
     ticks: [false, false, false, false, false, false],
-    showForm: true
+    showForm: false
   };
   render() {
     const { ticks, showForm } = this.state;
