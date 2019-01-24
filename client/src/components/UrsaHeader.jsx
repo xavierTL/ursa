@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 
 class UrsaHeader extends Component {
   render() {
-    console.log(this.props);
     return (
       <Navbar>
         <Navbar.Header>
