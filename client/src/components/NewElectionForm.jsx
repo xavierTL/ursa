@@ -17,11 +17,15 @@ class NewElectionForm extends Component {
     titleDone: false,
     startDate: new Date(),
     endDate: new Date(),
-    timesDone: false
+    timesDone: false,
+    candidates: [],
+    currentCand: ''
   };
   render() {
-    const { title, titleDone, timesDone } = this.state;
-    let now = [titleDone, timesDone].filter(x => x === true).length * 20;
+    const { title, titleDone, timesDone, candidates, currentCand } = this.state;
+    let now =
+      [titleDone, timesDone, candidates.length > 0].filter(x => x === true)
+        .length * 20;
     return (
       <div>
         <NewElectionHeader />
@@ -29,9 +33,9 @@ class NewElectionForm extends Component {
         <form className="new-election-form">
           <FormGroup
             controlId="formBasicText"
-            validationState={this.getValidationState('title')}
+            validationState={this.getValidationState()}
           >
-            <ControlLabel>Title.</ControlLabel>
+            <ControlLabel>Title:</ControlLabel>
             <FormControl
               type="text"
               value={title}
@@ -41,6 +45,7 @@ class NewElectionForm extends Component {
             <FormControl.Feedback />
             <HelpBlock>Must be at least 10 characters.</HelpBlock>
           </FormGroup>
+
           <FormGroup validationState={this.getStartTimeValidationState()}>
             <ControlLabel className="time">Start time:</ControlLabel>
             <DateTimePicker
@@ -49,6 +54,7 @@ class NewElectionForm extends Component {
             />
             <HelpBlock>At least one hour from now.</HelpBlock>
           </FormGroup>
+
           <FormGroup validationState={this.getEndTimeValidationState()}>
             <ControlLabel className="time">End time:</ControlLabel>
             <DateTimePicker
@@ -56,7 +62,24 @@ class NewElectionForm extends Component {
               value={this.state.endDate}
             />
             <HelpBlock>At least one hour after start time.</HelpBlock>
-            <Button onClick={() => this.setTimes()}>Set Dates</Button>
+            <Button onClick={() => this.setTimes()}>{`${
+              timesDone ? 'Change' : 'Set'
+            } times`}</Button>
+          </FormGroup>
+
+          <FormGroup
+            controlId="formBasicText"
+            validationState={this.getCandValidationState()}
+          >
+            <ControlLabel>Candidates:</ControlLabel>
+            <FormControl
+              type="text"
+              value={currentCand}
+              placeholder="e.g. 'Fabian'"
+              onChange={this.handleCandidateChange}
+            />
+            <FormControl.Feedback />
+            <HelpBlock>Must be at least 5 characters.</HelpBlock>
           </FormGroup>
         </form>
       </div>
@@ -78,9 +101,9 @@ class NewElectionForm extends Component {
     });
   };
 
-  getValidationState = data => {
-    const length = this.state[data].length;
-    return length > 10 ? 'success' : 'warning';
+  getValidationState = () => {
+    const length = this.state.title.length;
+    return length >= 10 ? 'success' : 'warning';
   };
 
   startChange = date => {
@@ -91,9 +114,8 @@ class NewElectionForm extends Component {
     let { startDate } = this.state;
     let startUnix = moment(startDate).unix();
     let anHourFromNow = moment(new Date()).unix() + 3600;
-    if (startUnix < anHourFromNow) {
-      return 'warning';
-    } else return 'success';
+    if (startUnix < anHourFromNow) return 'warning';
+    return 'success';
   };
 
   endChange = date => {
@@ -104,9 +126,8 @@ class NewElectionForm extends Component {
     const { endDate, startDate } = this.state;
     let startUnix = moment(startDate).unix();
     let endUnix = moment(endDate).unix();
-    if (startUnix + 3600 > endUnix) {
-      return 'warning';
-    } else return 'success';
+    if (startUnix + 3600 > endUnix) return 'warning';
+    return 'success';
   };
 
   setTimes = () => {
@@ -117,6 +138,16 @@ class NewElectionForm extends Component {
     if (startUnix < anHourFromNow) return;
     if (startUnix + 3600 > endUnix) return;
     this.setState({ timesDone: !timesDone });
+  };
+
+  handleCandidateChange = e => {
+    this.setState({ currentCand: e.target.value });
+  };
+
+  getCandValidationState = () => {
+    const { currentCand } = this.state;
+    if (currentCand.length >= 5) return 'success';
+    return 'warning';
   };
 }
 
