@@ -4,23 +4,28 @@ import {
   FormGroup,
   FormControl,
   ControlLabel,
-  HelpBlock
+  HelpBlock,
+  Button
 } from 'react-bootstrap';
 import NewElectionHeader from './NewElectionHeader';
+import DateTimePicker from 'react-datetime-picker';
 
 class NewElectionForm extends Component {
   state = {
     title: '',
-    titleDone: false
+    titleDone: false,
+    startDate: new Date(),
+    endDate: new Date(),
+    timesDone: false
   };
   render() {
-    const { title, titleDone } = this.state;
-    let now = [titleDone].filter(x => x === true).length * 20;
+    const { title, titleDone, timesDone } = this.state;
+    let now = [titleDone, timesDone].filter(x => x === true).length * 20;
     return (
       <div>
         <NewElectionHeader />
         <ProgressBar now={now} active label={`${now}%`} />
-        <form>
+        <form className="new-election-form">
           <FormGroup
             controlId="formBasicText"
             validationState={this.getValidationState('title')}
@@ -35,6 +40,17 @@ class NewElectionForm extends Component {
             <FormControl.Feedback />
             <HelpBlock>Must be at least 10 characters.</HelpBlock>
           </FormGroup>
+          Start time:
+          <DateTimePicker
+            onChange={this.startChange}
+            value={this.state.startDate}
+          />
+          End time:
+          <DateTimePicker
+            onChange={this.endChange}
+            value={this.state.endDate}
+          />
+          <Button>SET</Button>
         </form>
       </div>
     );
@@ -59,6 +75,15 @@ class NewElectionForm extends Component {
     const length = this.state[data].length;
     return length > 10 ? 'success' : 'warning';
   }
+
+  startChange = date => {
+    console.log(date);
+    this.setState({ startDate: date });
+  };
+  endChange = date => {
+    console.log(date);
+    this.setState({ endDate: date });
+  };
 }
 
 export default NewElectionForm;

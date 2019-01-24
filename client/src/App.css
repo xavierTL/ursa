@@ -55,5 +55,7 @@
   align-items: center;
 }
 
-.new-election-title {
+.new-election-form {
+  text-align: left;
+  padding: 20px;
 }
