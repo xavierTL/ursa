@@ -19,7 +19,7 @@
 }
 
 .icon {
-  width: 90px;
+  width: 10vw;
 }
 
 .spin {
@@ -35,8 +35,10 @@
   }
 }
 
-.nav-bar {
+.nav-bar,
+.new-election-jumbo {
   /* background-color: #ff0079; */
+  margin-bottom: 0px;
 }
 
 .check-boxes {
@@ -44,4 +46,14 @@
   flex-direction: column;
   text-align: left;
   padding-left: 20%;
+}
+
+.new-election-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.new-election-title {
 }
