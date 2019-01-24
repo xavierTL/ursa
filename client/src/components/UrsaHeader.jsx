@@ -1,10 +1,12 @@
 import { Navbar } from 'react-bootstrap';
 import React, { Component } from 'react';
+import '../App.css';
 
 class UrsaHeader extends Component {
   render() {
+    const { user } = this.props;
     return (
-      <Navbar>
+      <Navbar className="nav-bar">
         <Navbar.Header>
           <Navbar.Brand>
             <a href="#home">Ursa</a>
@@ -12,9 +14,7 @@ class UrsaHeader extends Component {
           <Navbar.Toggle />
         </Navbar.Header>
         <Navbar.Collapse>
-          <Navbar.Text pullRight>
-            Signed in as: <Navbar.Link href="#">{this.props.user}</Navbar.Link>
-          </Navbar.Text>
+          <Navbar.Text pullRight>{`user: ${user}`}</Navbar.Text>
         </Navbar.Collapse>
       </Navbar>
     );

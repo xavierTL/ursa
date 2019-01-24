@@ -1,17 +1,22 @@
 import React, { Component } from 'react';
 import UrsaHeader from './components/UrsaHeader';
+import Top from './components/Top';
+import './App.css';
 
 class App extends Component {
   state = {
     loading: true,
     drizzleState: null,
-    user: 'not connected to metamask'
+    user: 'loading...'
   };
   render() {
-    const { user } = this.state;
+    const { user, loading } = this.state;
     return (
       <div className="App">
-        <UrsaHeader user={user} />
+        <Top />
+        <div className="main-cont">
+          {loading ? null : <UrsaHeader user={user} />}
+        </div>
       </div>
     );
   }
@@ -25,7 +30,6 @@ class App extends Component {
         this.setState({ loading: false, drizzleState, user });
       }
     });
-    //    const user = this.props.drizzle.web3.eth.accounts.givenProvider
   }
 }
 
