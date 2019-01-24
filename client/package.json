@@ -6,6 +6,7 @@
     "@reach/router": "^1.2.1",
     "bootstrap": "^4.2.1",
     "drizzle": "^1.2.4",
+    "moment": "^2.24.0",
     "react": "^16.7.0",
     "react-bootstrap": "^0.32.4",
     "react-datetime-picker": "^2.1.1",

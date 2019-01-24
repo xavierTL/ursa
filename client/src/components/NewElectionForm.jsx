@@ -9,6 +9,7 @@ import {
 } from 'react-bootstrap';
 import NewElectionHeader from './NewElectionHeader';
 import DateTimePicker from 'react-datetime-picker';
+const moment = require('moment');
 
 class NewElectionForm extends Component {
   state = {
@@ -41,18 +42,20 @@ class NewElectionForm extends Component {
             <HelpBlock>Must be at least 10 characters.</HelpBlock>
           </FormGroup>
           <FormGroup validationState={this.getStartTimeValidationState()}>
-            <ControlLabel>Start time:</ControlLabel>
+            <ControlLabel className="time">Start time:</ControlLabel>
             <DateTimePicker
               onChange={this.startChange}
               value={this.state.startDate}
             />
+            <HelpBlock>At least one hour from now.</HelpBlock>
           </FormGroup>
           <FormGroup validationState={this.getEndTimeValidationState()}>
-            <ControlLabel>End time:</ControlLabel>
+            <ControlLabel className="time">End time:</ControlLabel>
             <DateTimePicker
               onChange={this.endChange}
               value={this.state.endDate}
             />
+            <HelpBlock>At least one hour after start time.</HelpBlock>
             <Button onClick={() => this.setTimes()}>Set Dates</Button>
           </FormGroup>
         </form>
@@ -85,8 +88,12 @@ class NewElectionForm extends Component {
   };
 
   getStartTimeValidationState = () => {
-    const { startDate } = this.state;
-    return 'warning';
+    let { startDate } = this.state;
+    let startUnix = moment(startDate).unix();
+    let anHourFromNow = moment(new Date()).unix() + 3600;
+    if (startUnix < anHourFromNow) {
+      return 'warning';
+    } else return 'success';
   };
 
   endChange = date => {
@@ -94,12 +101,21 @@ class NewElectionForm extends Component {
   };
 
   getEndTimeValidationState = () => {
-    const { endDate } = this.state;
-    return 'warning';
+    const { endDate, startDate } = this.state;
+    let startUnix = moment(startDate).unix();
+    let endUnix = moment(endDate).unix();
+    if (startUnix + 3600 > endUnix) {
+      return 'warning';
+    } else return 'success';
   };
 
   setTimes = () => {
-    const { timesDone } = this.state;
+    const { timesDone, endDate, startDate } = this.state;
+    let startUnix = moment(startDate).unix();
+    let anHourFromNow = moment(new Date()).unix() + 3600;
+    let endUnix = moment(endDate).unix();
+    if (startUnix < anHourFromNow) return;
+    if (startUnix + 3600 > endUnix) return;
     this.setState({ timesDone: !timesDone });
   };
 }
