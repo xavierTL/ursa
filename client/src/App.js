@@ -3,6 +3,7 @@ import UrsaHeader from './components/UrsaHeader';
 import Top from './components/Top';
 import ElectionBuilder from './components/ElectionBuilder';
 import './App.css';
+import { Router } from '@reach/router';
 
 class App extends Component {
   state = {
@@ -14,12 +15,14 @@ class App extends Component {
     const { user, loading } = this.state;
     return (
       <div className="App">
-        {/* <Top /> */}
+        <Top />
         <div className="main-cont">
           {loading ? null : (
             <>
               <UrsaHeader user={user} />
-              <ElectionBuilder />
+              <Router>
+                <ElectionBuilder path="new-election" />
+              </Router>
             </>
           )}
         </div>
