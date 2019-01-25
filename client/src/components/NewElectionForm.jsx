@@ -1,17 +1,11 @@
 import React, { Component } from 'react';
-import {
-  ProgressBar,
-  FormGroup,
-  FormControl,
-  ControlLabel,
-  HelpBlock,
-  Button,
-  ListGroup,
-  ListGroupItem
-} from 'react-bootstrap';
+import { ProgressBar, Button } from 'react-bootstrap';
 import NewElectionHeader from './NewElectionHeader';
 import ElectionTitle from './ElectionTitle';
 import ElectionTimes from './ElectionTimes';
+import ElectionCandidates from './ElectionCandidates';
+import ElectionVoters from './ElectionVoters';
+import ElectionFormReview from './ElectionFormReview';
 const moment = require('moment');
 
 class NewElectionForm extends Component {
@@ -24,9 +18,10 @@ class NewElectionForm extends Component {
     candidates: [],
     currentCand: '',
     candsDone: false,
-    voters: ['340529348752093847502'],
+    voters: [],
     currentVoter: '',
-    votersDone: false
+    votersDone: false,
+    review: false
   };
   render() {
     const {
@@ -40,7 +35,8 @@ class NewElectionForm extends Component {
       voters,
       votersDone,
       startDate,
-      endDate
+      endDate,
+      review
     } = this.state;
     let now =
       [titleDone, timesDone, candsDone, votersDone].filter(x => x === true)
@@ -49,87 +45,72 @@ class NewElectionForm extends Component {
       <div>
         <NewElectionHeader />
         <ProgressBar now={now} active label={`${now}%`} />
-        <form className="new-election-form">
-          <ElectionTitle
-            title={title}
-            getValidationState={this.getValidationState}
-            handleTitleChange={this.handleTitleChange}
-          />
-          <ElectionTimes
-            getStartTimeValidationState={this.getStartTimeValidationState}
-            startChange={this.startChange}
-            startDate={startDate}
-            getEndTimeValidationState={this.getEndTimeValidationState}
-            endChange={this.endChange}
-            endDate={endDate}
-            setTimes={this.setTimes}
-            timesDone={timesDone}
-          />
-
-          <FormGroup
-            controlId="formBasicText"
-            validationState={this.getCandValidationState()}
-          >
-            <ControlLabel>Add Candidate:</ControlLabel>
-            <FormControl
-              type="text"
-              value={currentCand}
-              placeholder="e.g. 'Fabian'"
-              onChange={this.handleCandidateChange}
-            />
-            <FormControl.Feedback />
-            <HelpBlock>Must be at least 5 characters.</HelpBlock>
-            <Button bsSize="small" onClick={() => this.addCandidate()}>
-              Add candidate
+        {review ? (
+          <>
+            <ElectionFormReview />
+            <Button
+              onClick={() => this.toggleReview()}
+              bsSize="large"
+              bsStyle="primary"
+            >
+              GO BACK
+            </Button>{' '}
+          </>
+        ) : (
+          <>
+            <form className="new-election-form">
+              <ElectionTitle
+                title={title}
+                getValidationState={this.getValidationState}
+                handleTitleChange={this.handleTitleChange}
+              />
+              <ElectionTimes
+                getStartTimeValidationState={this.getStartTimeValidationState}
+                startChange={this.startChange}
+                startDate={startDate}
+                getEndTimeValidationState={this.getEndTimeValidationState}
+                endChange={this.endChange}
+                endDate={endDate}
+                setTimes={this.setTimes}
+                timesDone={timesDone}
+              />
+              <ElectionCandidates
+                getCandValidationState={this.getCandValidationState}
+                currentCand={currentCand}
+                handleCandidateChange={this.handleCandidateChange}
+                addCandidate={this.addCandidate}
+                candidates={candidates}
+                setCandidates={this.setCandidates}
+              />
+              <ElectionVoters
+                getVoterValidationState={this.getVoterValidationState}
+                currentVoter={currentVoter}
+                handleVoterChange={this.handleVoterChange}
+                addVoter={this.addVoter}
+                voters={voters}
+                setVoters={this.setVoters}
+              />
+            </form>
+            <Button
+              onClick={() => this.toggleReview()}
+              bsSize="large"
+              bsStyle="primary"
+            >
+              REVIEW
             </Button>
-          </FormGroup>
-          <div className="cand-inner">
-            <ControlLabel>Candidates:</ControlLabel>
-            <ListGroup>
-              {candidates.map((cand, i) => (
-                <ListGroupItem key={i}>{`${i + 1}: ${cand}`}</ListGroupItem>
-              ))}
-            </ListGroup>
-            <Button bsSize="small" onClick={() => this.setCandidates()}>
-              Set candidates
-            </Button>
-          </div>
-
-          <FormGroup
-            controlId="formBasicText"
-            validationState={this.getVoterValidationState()}
-          >
-            <ControlLabel>Add voter address:</ControlLabel>
-            <FormControl
-              type="text"
-              value={currentVoter}
-              placeholder="e.g. '0xabc123'"
-              onChange={this.handleVoterChange}
-            />
-            <FormControl.Feedback />
-            <HelpBlock>Please ensure this is a public key.</HelpBlock>
-            <Button bsSize="small" onClick={() => this.addVoter()}>
-              Add voter
-            </Button>
-          </FormGroup>
-          <div className="cand-inner">
-            <ControlLabel>Voters:</ControlLabel>
-            <ListGroup>
-              {voters.map((voter, i) => (
-                <ListGroupItem key={i}>{`${i + 1}: ${voter}`}</ListGroupItem>
-              ))}
-            </ListGroup>
-            <Button bsSize="small" onClick={() => this.setVoters()}>
-              Set voters
-            </Button>
-          </div>
-        </form>
+          </>
+        )}
       </div>
     );
   }
   componentDidMount = async () => {
     const { methods } = this.props.drizzle.contracts.ElectionManager;
     console.log(await methods.smokeTest().call());
+  };
+
+  toggleReview = () => {
+    const { review } = this.state;
+    this.setState({ review: !review });
   };
 
   handleTitleChange = e => {
@@ -211,9 +192,29 @@ class NewElectionForm extends Component {
     }
   };
 
-  getVoterValidationState = () => {};
+  getVoterValidationState = () => {
+    const { currentVoter, votersDone } = this.state;
+    if (currentVoter.length === 42 || votersDone) return 'success';
+    return 'warning';
+  };
 
-  handleVoterChange = () => {};
+  handleVoterChange = e => {
+    this.setState({ currentVoter: e.target.value });
+  };
+
+  addVoter = () => {
+    const { voters, currentVoter } = this.state;
+    if (currentVoter.length === 42) {
+      voters.push(currentVoter);
+      this.setState({ voters, currentVoter: '' });
+    }
+  };
+  setVoters = () => {
+    const { votersDone, voters } = this.state;
+    if (voters.length) {
+      this.setState({ votersDone: !votersDone });
+    }
+  };
 }
 
 export default NewElectionForm;
