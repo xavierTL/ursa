@@ -8,7 +8,7 @@ class Top extends Component {
         <Image
           src="https://image.flaticon.com/icons/svg/1346/1346537.svg"
           circle
-          className="spin icon"
+          className="spin logo"
         />
       </div>
     );

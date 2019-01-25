@@ -10,19 +10,23 @@ import {
   ListGroupItem
 } from 'react-bootstrap';
 import NewElectionHeader from './NewElectionHeader';
-import DateTimePicker from 'react-datetime-picker';
+import ElectionTitle from './ElectionTitle';
+import ElectionTimes from './ElectionTimes';
 const moment = require('moment');
 
 class NewElectionForm extends Component {
   state = {
     title: '',
     titleDone: false,
-    startDate: new Date(),
-    endDate: new Date(),
+    startDate: null,
+    endDate: null,
     timesDone: false,
     candidates: [],
     currentCand: '',
-    candsDone: false
+    candsDone: false,
+    voters: ['340529348752093847502'],
+    currentVoter: '',
+    votersDone: false
   };
   render() {
     const {
@@ -31,50 +35,36 @@ class NewElectionForm extends Component {
       timesDone,
       candidates,
       currentCand,
-      candsDone
+      candsDone,
+      currentVoter,
+      voters,
+      votersDone,
+      startDate,
+      endDate
     } = this.state;
     let now =
-      [titleDone, timesDone, candsDone].filter(x => x === true).length * 20;
+      [titleDone, timesDone, candsDone, votersDone].filter(x => x === true)
+        .length * 20;
     return (
       <div>
         <NewElectionHeader />
         <ProgressBar now={now} active label={`${now}%`} />
         <form className="new-election-form">
-          <FormGroup
-            controlId="formBasicText"
-            validationState={this.getValidationState()}
-          >
-            <ControlLabel>Title:</ControlLabel>
-            <FormControl
-              type="text"
-              value={title}
-              placeholder="e.g. 'Who should cook dinner tonight?'"
-              onChange={this.handleTitleChange}
-            />
-            <FormControl.Feedback />
-            <HelpBlock>Must be at least 10 characters.</HelpBlock>
-          </FormGroup>
-
-          <FormGroup validationState={this.getStartTimeValidationState()}>
-            <ControlLabel className="time">Start time:</ControlLabel>
-            <DateTimePicker
-              onChange={this.startChange}
-              value={this.state.startDate}
-            />
-            <HelpBlock>At least one hour from now.</HelpBlock>
-          </FormGroup>
-
-          <FormGroup validationState={this.getEndTimeValidationState()}>
-            <ControlLabel className="time">End time:</ControlLabel>
-            <DateTimePicker
-              onChange={this.endChange}
-              value={this.state.endDate}
-            />
-            <HelpBlock>At least one hour after start time.</HelpBlock>
-            <Button bsSize="small" onClick={() => this.setTimes()}>{`${
-              timesDone ? 'Change' : 'Set'
-            } times`}</Button>
-          </FormGroup>
+          <ElectionTitle
+            title={title}
+            getValidationState={this.getValidationState}
+            handleTitleChange={this.handleTitleChange}
+          />
+          <ElectionTimes
+            getStartTimeValidationState={this.getStartTimeValidationState}
+            startChange={this.startChange}
+            startDate={startDate}
+            getEndTimeValidationState={this.getEndTimeValidationState}
+            endChange={this.endChange}
+            endDate={endDate}
+            setTimes={this.setTimes}
+            timesDone={timesDone}
+          />
 
           <FormGroup
             controlId="formBasicText"
@@ -102,6 +92,35 @@ class NewElectionForm extends Component {
             </ListGroup>
             <Button bsSize="small" onClick={() => this.setCandidates()}>
               Set candidates
+            </Button>
+          </div>
+
+          <FormGroup
+            controlId="formBasicText"
+            validationState={this.getVoterValidationState()}
+          >
+            <ControlLabel>Add voter address:</ControlLabel>
+            <FormControl
+              type="text"
+              value={currentVoter}
+              placeholder="e.g. '0xabc123'"
+              onChange={this.handleVoterChange}
+            />
+            <FormControl.Feedback />
+            <HelpBlock>Please ensure this is a public key.</HelpBlock>
+            <Button bsSize="small" onClick={() => this.addVoter()}>
+              Add voter
+            </Button>
+          </FormGroup>
+          <div className="cand-inner">
+            <ControlLabel>Voters:</ControlLabel>
+            <ListGroup>
+              {voters.map((voter, i) => (
+                <ListGroupItem key={i}>{`${i + 1}: ${voter}`}</ListGroupItem>
+              ))}
+            </ListGroup>
+            <Button bsSize="small" onClick={() => this.setVoters()}>
+              Set voters
             </Button>
           </div>
         </form>
@@ -135,7 +154,9 @@ class NewElectionForm extends Component {
 
   getStartTimeValidationState = () => {
     let { startDate } = this.state;
-    let startUnix = moment(startDate).unix();
+    let startUnix = isNaN(moment(startDate).unix())
+      ? 0
+      : moment(startDate).unix();
     let anHourFromNow = moment(new Date()).unix() + 3600;
     if (startUnix < anHourFromNow) return 'warning';
     return 'success';
@@ -147,8 +168,10 @@ class NewElectionForm extends Component {
 
   getEndTimeValidationState = () => {
     const { endDate, startDate } = this.state;
-    let startUnix = moment(startDate).unix();
-    let endUnix = moment(endDate).unix();
+    let startUnix = isNaN(moment(startDate).unix())
+      ? 0
+      : moment(startDate).unix();
+    let endUnix = isNaN(moment(endDate).unix()) ? 0 : moment(endDate).unix();
     if (startUnix + 3600 > endUnix) return 'warning';
     return 'success';
   };
@@ -187,6 +210,10 @@ class NewElectionForm extends Component {
       this.setState({ candsDone: !candsDone });
     }
   };
+
+  getVoterValidationState = () => {};
+
+  handleVoterChange = () => {};
 }
 
 export default NewElectionForm;

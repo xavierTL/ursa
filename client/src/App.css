@@ -22,6 +22,10 @@
   width: 10vw;
 }
 
+.logo {
+  width: 90px;
+}
+
 .spin {
   animation: logo-spin infinite 40s linear;
 }
@@ -57,7 +61,7 @@
 
 .new-election-form {
   text-align: left;
-  padding: 20px;
+  padding: 5vw;
 }
 .time {
   width: 90px;
