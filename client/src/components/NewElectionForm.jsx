@@ -5,7 +5,9 @@ import {
   FormControl,
   ControlLabel,
   HelpBlock,
-  Button
+  Button,
+  ListGroup,
+  ListGroupItem
 } from 'react-bootstrap';
 import NewElectionHeader from './NewElectionHeader';
 import DateTimePicker from 'react-datetime-picker';
@@ -19,13 +21,20 @@ class NewElectionForm extends Component {
     endDate: new Date(),
     timesDone: false,
     candidates: [],
-    currentCand: ''
+    currentCand: '',
+    candsDone: false
   };
   render() {
-    const { title, titleDone, timesDone, candidates, currentCand } = this.state;
+    const {
+      title,
+      titleDone,
+      timesDone,
+      candidates,
+      currentCand,
+      candsDone
+    } = this.state;
     let now =
-      [titleDone, timesDone, candidates.length > 0].filter(x => x === true)
-        .length * 20;
+      [titleDone, timesDone, candsDone].filter(x => x === true).length * 20;
     return (
       <div>
         <NewElectionHeader />
@@ -62,7 +71,7 @@ class NewElectionForm extends Component {
               value={this.state.endDate}
             />
             <HelpBlock>At least one hour after start time.</HelpBlock>
-            <Button onClick={() => this.setTimes()}>{`${
+            <Button bsSize="small" onClick={() => this.setTimes()}>{`${
               timesDone ? 'Change' : 'Set'
             } times`}</Button>
           </FormGroup>
@@ -71,7 +80,7 @@ class NewElectionForm extends Component {
             controlId="formBasicText"
             validationState={this.getCandValidationState()}
           >
-            <ControlLabel>Candidates:</ControlLabel>
+            <ControlLabel>Add Candidate:</ControlLabel>
             <FormControl
               type="text"
               value={currentCand}
@@ -80,7 +89,21 @@ class NewElectionForm extends Component {
             />
             <FormControl.Feedback />
             <HelpBlock>Must be at least 5 characters.</HelpBlock>
+            <Button bsSize="small" onClick={() => this.addCandidate()}>
+              Add candidate
+            </Button>
           </FormGroup>
+          <div className="cand-inner">
+            <ControlLabel>Candidates:</ControlLabel>
+            <ListGroup>
+              {candidates.map((cand, i) => (
+                <ListGroupItem key={i}>{`${i + 1}: ${cand}`}</ListGroupItem>
+              ))}
+            </ListGroup>
+            <Button bsSize="small" onClick={() => this.setCandidates()}>
+              Set candidates
+            </Button>
+          </div>
         </form>
       </div>
     );
@@ -145,9 +168,24 @@ class NewElectionForm extends Component {
   };
 
   getCandValidationState = () => {
-    const { currentCand } = this.state;
-    if (currentCand.length >= 5) return 'success';
+    const { currentCand, candsDone } = this.state;
+    if (currentCand.length >= 5 || candsDone) return 'success';
     return 'warning';
+  };
+
+  addCandidate = () => {
+    const { candidates, currentCand } = this.state;
+    if (currentCand.length >= 5) {
+      candidates.push(currentCand);
+      this.setState({ candidates, currentCand: '' });
+    }
+  };
+
+  setCandidates = () => {
+    const { candsDone, candidates } = this.state;
+    if (candidates.length) {
+      this.setState({ candsDone: !candsDone });
+    }
   };
 }
 
