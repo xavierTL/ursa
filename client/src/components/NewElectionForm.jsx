@@ -15,13 +15,13 @@ class NewElectionForm extends Component {
     startDate: null,
     endDate: null,
     timesDone: false,
-    candidates: [],
+    candidates: ['not really'],
     currentCand: '',
     candsDone: false,
-    voters: [],
+    voters: ['0xe7ba88433e60c53c69b19f503e00851b98891551'],
     currentVoter: '',
     votersDone: false,
-    review: false,
+    review: true,
     completed: false
   };
   render() {
@@ -50,7 +50,7 @@ class NewElectionForm extends Component {
         <NewElectionHeader review={review} title={title} />
         <ProgressBar now={now} active label={`${now}%`} />
         {review ? (
-          <>
+          <div className="new-election-form">
             <Pager>
               <Pager.Item previous onClick={() => this.toggleReview()}>
                 &larr; Go back
@@ -60,7 +60,7 @@ class NewElectionForm extends Component {
               toggleCompleted={this.toggleCompleted}
               electionData={electionData}
             />
-          </>
+          </div>
         ) : (
           <>
             <form className="new-election-form">
