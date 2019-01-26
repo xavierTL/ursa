@@ -3,12 +3,15 @@ import React, { Component } from 'react';
 
 class NewElectionHeader extends Component {
   render() {
+    const { review, title } = this.props;
     return (
       <div>
         <Jumbotron className="new-election-jumbo">
           <div className="new-election-header">
             <div>
-              <h1 className="new-election-title">Your new election.</h1>
+              <h1 className="new-election-title">
+                {review ? title : 'Your new election.'}
+              </h1>
             </div>
             <div>
               <Image

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ProgressBar, Button } from 'react-bootstrap';
+import { ProgressBar, Button, Pager } from 'react-bootstrap';
 import NewElectionHeader from './NewElectionHeader';
 import ElectionTitle from './ElectionTitle';
 import ElectionTimes from './ElectionTimes';
@@ -10,7 +10,7 @@ const moment = require('moment');
 
 class NewElectionForm extends Component {
   state = {
-    title: '',
+    title: 'Is Haggis Food?',
     titleDone: false,
     startDate: null,
     endDate: null,
@@ -21,7 +21,8 @@ class NewElectionForm extends Component {
     voters: [],
     currentVoter: '',
     votersDone: false,
-    review: false
+    review: false,
+    completed: false
   };
   render() {
     const {
@@ -36,25 +37,29 @@ class NewElectionForm extends Component {
       votersDone,
       startDate,
       endDate,
-      review
+      review,
+      completed
     } = this.state;
     let now =
-      [titleDone, timesDone, candsDone, votersDone].filter(x => x === true)
-        .length * 20;
+      [titleDone, timesDone, candsDone, votersDone, completed].filter(
+        x => x === true
+      ).length * 20;
+    const electionData = { title, candidates, voters, startDate, endDate };
     return (
       <div>
-        <NewElectionHeader />
+        <NewElectionHeader review={review} title={title} />
         <ProgressBar now={now} active label={`${now}%`} />
         {review ? (
           <>
-            <ElectionFormReview />
-            <Button
-              onClick={() => this.toggleReview()}
-              bsSize="large"
-              bsStyle="primary"
-            >
-              GO BACK
-            </Button>{' '}
+            <Pager>
+              <Pager.Item previous onClick={() => this.toggleReview()}>
+                &larr; Go back
+              </Pager.Item>
+            </Pager>
+            <ElectionFormReview
+              toggleCompleted={this.toggleCompleted}
+              electionData={electionData}
+            />
           </>
         ) : (
           <>
@@ -111,6 +116,11 @@ class NewElectionForm extends Component {
   toggleReview = () => {
     const { review } = this.state;
     this.setState({ review: !review });
+  };
+
+  toggleCompleted = () => {
+    const { completed } = this.state;
+    this.setState({ completed: !completed });
   };
 
   handleTitleChange = e => {
