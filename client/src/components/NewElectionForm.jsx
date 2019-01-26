@@ -10,18 +10,18 @@ const moment = require('moment');
 
 class NewElectionForm extends Component {
   state = {
-    title: 'Is Haggis Food?',
+    title: '',
     titleDone: false,
     startDate: null,
     endDate: null,
     timesDone: false,
-    candidates: ['not really'],
+    candidates: [],
     currentCand: '',
     candsDone: false,
-    voters: ['0xe7ba88433e60c53c69b19f503e00851b98891551'],
+    voters: [],
     currentVoter: '',
     votersDone: false,
-    review: true,
+    review: false,
     completed: false
   };
   render() {
@@ -44,7 +44,9 @@ class NewElectionForm extends Component {
       [titleDone, timesDone, candsDone, votersDone, completed].filter(
         x => x === true
       ).length * 20;
-    const electionData = { title, candidates, voters, startDate, endDate };
+    const stringStart = JSON.stringify(startDate);
+    const stringEnd = JSON.stringify(endDate);
+    const electionData = { title, candidates, voters, stringStart, stringEnd };
     return (
       <div>
         <NewElectionHeader review={review} title={title} />
@@ -163,7 +165,7 @@ class NewElectionForm extends Component {
       ? 0
       : moment(startDate).unix();
     let endUnix = isNaN(moment(endDate).unix()) ? 0 : moment(endDate).unix();
-    if (startUnix + 3600 > endUnix) return 'warning';
+    if (startUnix + 3600 >= endUnix) return 'warning';
     return 'success';
   };
 

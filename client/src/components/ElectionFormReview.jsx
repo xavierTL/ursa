@@ -1,32 +1,34 @@
 import React from 'react';
-import { Button, Well, Table } from 'react-bootstrap';
+import { Button, Table } from 'react-bootstrap';
+import ReviewTable from './ReviewTable';
+const moment = require('moment');
 
 const ElectionFormReview = ({ toggleCompleted, electionData }) => {
-  console.log(electionData);
+  const { title, stringStart, stringEnd, candidates, voters } = electionData;
+  let start = JSON.parse(stringStart);
+  let end = JSON.parse(stringEnd);
+  start = moment(start).format('dddd, MMMM Do YYYY, h:mm:ss a');
+  end = moment(end).format('dddd, MMMM Do YYYY, h:mm:ss a');
   return (
     <>
-      <Table responsive>
+      <Table responsive striped>
         <thead>
           <tr>
-            <th>Title</th>
-            <th>Start</th>
-            <th>End</th>
+            <th className="table-int">Title</th>
+            <th>Opens</th>
+            <th>Closes</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>{electionData.title}</td>
-            <td>{electionData.startDate}</td>
-            <td>{electionData.endDate}</td>
+            <td>{title}</td>
+            <td>{start}</td>
+            <td>{end}</td>
           </tr>
         </tbody>
-        <thead>
-          <tr>
-            <th>Candidates</th>
-            <th>Voters</th>
-          </tr>
-        </thead>
       </Table>
+      <ReviewTable data={'Candidates'} dataArray={candidates} />
+      <ReviewTable data={'Voters'} dataArray={voters} />
       <Button onClick={() => toggleCompleted()}>Launch!</Button>
     </>
   );

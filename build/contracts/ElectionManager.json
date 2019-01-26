@@ -11776,12 +11776,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x5AF56a246FF954bc36D4ab2Ee323a4bf287c831E",
-      "transactionHash": "0xaed9a6c04ccfe246a9007328043fabdcec8ba85b2b88ccd45cd8fe1e9113974d"
+      "address": "0x1b6ee706D6b8FC44ea6ce0C9e6F2a8f7996A77c4",
+      "transactionHash": "0x58b202088a45f1edeafb3227de222f5c99342ca66513f479e6d29638d998aeb0"
     }
   },
   "schemaVersion": "3.0.0",
-  "updatedAt": "2019-01-24T17:08:51.112Z",
+  "updatedAt": "2019-01-26T15:28:07.793Z",
   "devdoc": {
     "methods": {
       "allowance(address,address)": {

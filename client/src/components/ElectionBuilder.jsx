@@ -5,11 +5,11 @@ import NewElectionForm from './NewElectionForm';
 
 class ElectionBuilder extends Component {
   state = {
-    ticks: [false, false, false, false, false, false],
-    showForm: true
+    understand: false,
+    showForm: false
   };
   render() {
-    const { ticks, showForm } = this.state;
+    const { understand, showForm } = this.state;
     const { drizzle } = this.props;
     return (
       <div>
@@ -22,11 +22,11 @@ class ElectionBuilder extends Component {
               <p>
                 There's a few things you'll need before you start your election:
               </p>
-              <InstructionsForm tick={this.tick} />
+              <InstructionsForm understand={this.understand} />
             </Jumbotron>
-            {ticks.includes(false) ? null : (
+            {understand ? (
               <Button onClick={() => this.showForm()}>let's go!</Button>
-            )}
+            ) : null}
           </>
         )}
       </div>
@@ -35,10 +35,9 @@ class ElectionBuilder extends Component {
   showForm = () => {
     this.setState({ showForm: true });
   };
-  tick = i => {
-    const { ticks } = this.state;
-    ticks[i] = !ticks[i];
-    this.setState({ ticks });
+  understand = i => {
+    const { understand } = this.state;
+    this.setState({ understand: !understand });
   };
 }
 
