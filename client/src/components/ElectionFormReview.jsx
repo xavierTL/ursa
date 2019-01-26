@@ -5,6 +5,7 @@ const moment = require('moment');
 
 const ElectionFormReview = ({ toggleCompleted, electionData }) => {
   const { title, stringStart, stringEnd, candidates, voters } = electionData;
+  console.log(electionData);
   let start = JSON.parse(stringStart);
   let end = JSON.parse(stringEnd);
   start = moment(start).format('dddd, MMMM Do YYYY, h:mm:ss a');

@@ -59,6 +59,15 @@
   align-items: center;
 }
 
+.new-election-title {
+  flex: 4;
+  padding: 2vw;
+}
+
+.new-election-logo {
+  flex: 1;
+}
+
 .new-election-form {
   text-align: left;
   padding: 5vw;
