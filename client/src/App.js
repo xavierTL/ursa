@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import UrsaHeader from './components/UrsaHeader';
 import Top from './components/Top';
 import ElectionBuilder from './components/ElectionBuilder';
+import ElectionsDisplay from './components/ElectionsDisplay';
 import './App.css';
 import { Router } from '@reach/router';
 
@@ -23,6 +24,7 @@ class App extends Component {
               <UrsaHeader user={user} />
               <Router>
                 <ElectionBuilder path="new-election" drizzle={drizzle} />
+                <ElectionsDisplay path="elections" drizzle={drizzle} />
               </Router>
             </>
           )}

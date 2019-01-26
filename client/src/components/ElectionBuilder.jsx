@@ -6,7 +6,7 @@ import NewElectionForm from './NewElectionForm';
 class ElectionBuilder extends Component {
   state = {
     understand: false,
-    showForm: true
+    showForm: false
   };
   render() {
     const { understand, showForm } = this.state;

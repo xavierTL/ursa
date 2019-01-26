@@ -22,7 +22,8 @@ class NewElectionForm extends Component {
     currentVoter: '',
     votersDone: false,
     review: false,
-    completed: false
+    completed: false,
+    tx: ''
   };
   render() {
     const {
@@ -38,7 +39,8 @@ class NewElectionForm extends Component {
       startDate,
       endDate,
       review,
-      completed
+      completed,
+      tx
     } = this.state;
     let now =
       [titleDone, timesDone, candsDone, votersDone, completed].filter(
@@ -49,7 +51,7 @@ class NewElectionForm extends Component {
     const electionData = { title, candidates, voters, stringStart, stringEnd };
     return (
       <div>
-        <NewElectionHeader review={review} title={title} />
+        <NewElectionHeader review={review} title={title} tx={tx} />
         <ProgressBar now={now} active label={`${now}%`} />
         {review ? (
           <div className="new-election-form">
@@ -116,7 +118,6 @@ class NewElectionForm extends Component {
   componentDidMount = async () => {
     const { methods } = this.props.drizzle.contracts.ElectionManager;
     console.log(await methods.smokeTest().call());
-    this.launchElection();
   };
 
   toggleReview = () => {
@@ -131,23 +132,14 @@ class NewElectionForm extends Component {
   };
 
   launchElection = async () => {
-    // const { title, candidates, voters, startDate, endDate } = this.state;
+    const { title, candidates, voters, startDate, endDate } = this.state;
     const { methods } = this.props.drizzle.contracts.ElectionManager;
-    // const startUnix = moment(startDate).unix();
-    // const endUnix = moment(endDate).unix();
-    const title = 'Who should turn the cosy light off?';
-    const candidates = ['Xavier', 'Eabha'];
-    const voters = [
-      '0x7B8538a3Ca63E17454823171F4bCdD06EC2bF83F',
-      '0x7b59179c6EB586df41f993A98F513D46b21130Ef',
-      '0x165d58EcA050F0b8335B8a4c47baEEbdF326e138',
-      '0x06702BC73AaE4F2764a41E2481A1854fbF6E5D7A',
-      '0x8e92275E1a3f160B4d6cB4e9FFdD531AB53e326b'
-    ];
-    const startUnix = 1548536400;
-    const endUnix = 1548806400;
-
-    console.log(methods);
+    const startUnix = moment(startDate).unix();
+    const endUnix = moment(endDate).unix();
+    const id = await methods
+      .startElection(title, startUnix, endUnix, candidates[0], voters)
+      .send();
+    this.setState({ tx: id.transactionHash });
   };
 
   handleTitleChange = e => {
