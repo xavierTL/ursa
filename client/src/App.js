@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import UrsaHeader from './components/UrsaHeader';
+import Nav from './components/Nav';
 import Top from './components/Top';
 import ElectionBuilder from './components/ElectionBuilder';
 import ElectionsDisplay from './components/ElectionsDisplay';
+import ElectionView from './components/ElectionView';
+import Woops from './components/Woops';
+import Home from './components/Home';
 import './App.css';
 import { Router } from '@reach/router';
 
@@ -21,10 +24,17 @@ class App extends Component {
         <div className="main-cont">
           {loading ? null : (
             <>
-              <UrsaHeader user={user} />
+              <Nav user={user} />
               <Router>
+                <Home path="home" />
                 <ElectionBuilder path="new-election" drizzle={drizzle} />
-                <ElectionsDisplay path="elections" drizzle={drizzle} />
+                <ElectionsDisplay
+                  path="my-elections"
+                  drizzle={drizzle}
+                  user={user}
+                />
+                <ElectionView path="election/:id" />
+                <Woops path="*" />
               </Router>
             </>
           )}

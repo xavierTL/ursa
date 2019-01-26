@@ -1,14 +1,15 @@
 import React from 'react';
 import { Jumbotron, Image } from 'react-bootstrap';
 
-const JumboHead = ({ text, imgId }) => {
+const JumboHead = ({ text, sub, imgId }) => {
   return (
-    <Jumbotron className="new-election-jumbo">
-      <div className="new-election-header">
-        <div className="new-election-title">
+    <Jumbotron>
+      <div className="jumbo-outer">
+        <div className="title">
           <h1>{text}</h1>
+          <h3>{sub}</h3>
         </div>
-        <div className="new-election-logo">
+        <div className="icon-cont">
           <Image
             src={`https://image.flaticon.com/icons/svg/1346/${imgId}.svg`}
             className="icon"

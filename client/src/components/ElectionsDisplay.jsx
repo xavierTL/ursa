@@ -1,12 +1,31 @@
 import React, { Component } from 'react';
 import JumboHead from './JumboHead';
+import ElectionsTable from './ElectionsTable';
 
 class ElectionsDisplay extends Component {
-  state = { electionsArray: [] };
+  state = { electionsArray: [], loading: true };
   render() {
+    const { electionsArray, loading } = this.state;
+    const { user } = this.props;
+    const electionsFormatted = electionsArray.map(election => {
+      return [election.creator, election.electionName];
+    });
     return (
       <>
-        <JumboHead imgId="1346551" text="Elections" />
+        <JumboHead
+          imgId="1346551"
+          text="My Elections"
+          sub="Manage, vote and view."
+        />
+        <div className="pad">
+          {loading ? null : (
+            <ElectionsTable
+              data={'Elections'}
+              elections={electionsFormatted}
+              user={user}
+            />
+          )}
+        </div>
       </>
     );
   }
@@ -22,9 +41,9 @@ class ElectionsDisplay extends Component {
     for (let i = 0; i < electionCount; i++) {
       promiseArray.push(methods.elections(i + 1).call());
     }
-    Promise.all(promiseArray).then(electionsArray =>
-      this.setState({ electionsArray })
-    );
+    Promise.all(promiseArray).then(electionsArray => {
+      this.setState({ electionsArray, loading: false });
+    });
   };
 }
 

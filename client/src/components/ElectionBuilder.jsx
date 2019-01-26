@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Jumbotron, Button } from 'react-bootstrap';
 import InstructionsForm from './InstructionsForm';
 import NewElectionForm from './NewElectionForm';
+import JumboHead from './JumboHead';
 
 class ElectionBuilder extends Component {
   state = {
@@ -17,13 +18,13 @@ class ElectionBuilder extends Component {
           <NewElectionForm drizzle={drizzle} />
         ) : (
           <>
-            <Jumbotron>
-              <h1>Time to do some democracy.</h1>
-              <p>
-                There's a few things you'll need before you start your election:
-              </p>
-              <InstructionsForm understand={this.understand} />
-            </Jumbotron>
+            <JumboHead
+              imgId="1346543"
+              text="New Election"
+              sub="Things you'll need before you start:"
+            />
+
+            <InstructionsForm understand={this.understand} />
             {understand ? (
               <Button onClick={() => this.showForm()}>let's go!</Button>
             ) : null}

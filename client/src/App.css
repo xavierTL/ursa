@@ -27,7 +27,7 @@
 }
 
 .spin {
-  animation: logo-spin infinite 40s linear;
+  animation: logo-spin infinite 50s linear;
 }
 
 @keyframes logo-spin {
@@ -52,24 +52,31 @@
   align-items: center;
 }
 
-.new-election-header {
+.new-election-header,
+.jumbo-outer {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
   align-items: center;
 }
 
-.new-election-title {
+.new-election-title,
+.title {
   flex: 3;
   padding: 2vw;
 }
 
-.new-election-logo {
+.new-election-logo,
+.icon-cont {
   flex: 1;
 }
 
 .new-election-form {
   text-align: left;
+  padding: 5vw;
+}
+
+.pad {
   padding: 5vw;
 }
 
@@ -90,4 +97,8 @@
 
 .center {
   align-items: center;
+}
+
+.table {
+  text-align: left;
 }

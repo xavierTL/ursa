@@ -11,7 +11,7 @@ class NewElectionHeader extends Component {
             {tx.length ? (
               <>
                 <h1>Success!</h1>
-                <h2>Go to Elections to view</h2>{' '}
+                <h2>Go to My Elections to view</h2>{' '}
               </>
             ) : (
               <h1>{review ? title : 'Your new election.'}</h1>

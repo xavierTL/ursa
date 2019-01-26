@@ -1,19 +1,21 @@
 import React from 'react';
-import { Table } from 'react-bootstrap';
+import { Table, Badge } from 'react-bootstrap';
 
-const ReviewTable = ({ data, dataArray }) => {
+const ReviewTable = ({ data, dataArray, creators }) => {
   return (
-    <Table striped responsive>
+    <Table striped responsive className="table pad">
       <thead>
         <tr>
-          <th className="table-int">#</th>
+          <th className="table-int" />
           <th>{data}</th>
         </tr>
       </thead>
       <tbody>
         {dataArray.map((datum, i) => (
           <tr key={i}>
-            <td>{i + 1}</td>
+            <td>
+              <Badge>{i + 1}</Badge>
+            </td>
             <td>{datum}</td>
           </tr>
         ))}
