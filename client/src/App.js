@@ -26,7 +26,8 @@ class App extends Component {
             <>
               <Nav user={user} />
               <Router>
-                <Home path="home" />
+                <Home path="/" />
+                <Home path="/home" />
                 <ElectionBuilder path="new-election" drizzle={drizzle} />
                 <ElectionsDisplay
                   path="elections"
