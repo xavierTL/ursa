@@ -14,7 +14,7 @@ class ElectionsDisplay extends Component {
       <>
         <JumboHead
           imgId="1346551"
-          text="My Elections"
+          text="Elections"
           sub="Manage, vote and view."
         />
         <div className="pad">

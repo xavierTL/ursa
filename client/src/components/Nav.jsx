@@ -12,7 +12,7 @@ class Nav extends Component {
           <Link to="/home">Home</Link>
         </Navbar.Text>
         <Navbar.Text>
-          <Link to="my-elections">My Elections</Link>
+          <Link to="elections">Elections</Link>
         </Navbar.Text>{' '}
         <Navbar.Text>
           <Link to="new-election">New Election</Link>

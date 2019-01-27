@@ -22,6 +22,10 @@
   width: 10vw;
 }
 
+.tiny-icon {
+  width: 15px;
+}
+
 .logo {
   width: 90px;
 }
@@ -50,6 +54,14 @@
   flex-direction: column;
   text-align: left;
   align-items: center;
+}
+
+.owned {
+  background-color: #ff0079;
+}
+
+.not-owned {
+  /* background-color: #1067b8; */
 }
 
 .new-election-header,

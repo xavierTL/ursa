@@ -29,7 +29,7 @@ class App extends Component {
                 <Home path="home" />
                 <ElectionBuilder path="new-election" drizzle={drizzle} />
                 <ElectionsDisplay
-                  path="my-elections"
+                  path="elections"
                   drizzle={drizzle}
                   user={user}
                 />
