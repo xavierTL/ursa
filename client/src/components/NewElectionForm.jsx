@@ -117,7 +117,7 @@ class NewElectionForm extends Component {
   }
   componentDidMount = async () => {
     const { methods } = this.props.drizzle.contracts.ElectionManager;
-    console.log(await methods.smokeTest().call());
+    // console.log(await methods.smokeTest().call());
   };
 
   toggleReview = () => {

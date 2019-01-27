@@ -29,9 +29,8 @@ contract ElectionManager is ERC20 {
 
     function startElection(string memory _electionName, uint _startTime, uint _endTime, string memory seedCandidate, address[] memory _whiteList) public returns (uint) {
         electionCount++;
-        uint start = setTimer(_startTime);
-        uint end = setTimer(_endTime);
-        elections[electionCount] = Election(msg.sender, _electionName, start, end, new uint[](0), new address[](0));
+
+        elections[electionCount] = Election(msg.sender, _electionName, _startTime, _endTime, new uint[](0), new address[](0));
         candidatesCount++;
         candidateIds.push(candidatesCount);
         candidateStorage[candidatesCount] = Candidate(
@@ -91,11 +90,6 @@ contract ElectionManager is ERC20 {
         elections[electionId].whiteList.push(voter);
         mint(1);
         distributeToken(voter);
-    }
-
-    function setTimer(uint _voteLength) public view returns (uint) {
-        uint StartTime = block.timestamp;
-        return StartTime + _voteLength;
     }
     
     function mint(uint _tokens) private {
