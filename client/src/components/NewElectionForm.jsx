@@ -136,6 +136,7 @@ class NewElectionForm extends Component {
     const { methods } = this.props.drizzle.contracts.ElectionManager;
     const startUnix = moment(startDate).unix();
     const endUnix = moment(endDate).unix();
+    console.log(startUnix, endUnix);
     const id = await methods
       .startElection(title, startUnix, endUnix, candidates[0], voters)
       .send();

@@ -33,7 +33,7 @@ class App extends Component {
                   drizzle={drizzle}
                   user={user}
                 />
-                <ElectionView path="election/:id" />
+                <ElectionView path="election/:id" drizzle={drizzle} />
                 <Woops path="*" />
               </Router>
             </>
