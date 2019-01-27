@@ -22,6 +22,10 @@
   width: 10vw;
 }
 
+.small-icon {
+  width: 20px;
+}
+
 .tiny-icon {
   width: 15px;
 }
@@ -44,7 +48,8 @@
 }
 
 .nav-bar,
-.new-election-jumbo {
+.new-election-jumbo,
+.jumbo {
   /* background-color: #ff0079; */
   margin-bottom: 0px;
 }
@@ -62,6 +67,15 @@
 
 .not-owned {
   /* background-color: #1067b8; */
+}
+
+.alert-bar {
+  display: flex;
+}
+
+.alert {
+  flex: 1;
+  margin-bottom: 0px;
 }
 
 .new-election-header,

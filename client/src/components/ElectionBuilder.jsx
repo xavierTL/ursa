@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Jumbotron, Button } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import InstructionsForm from './InstructionsForm';
 import NewElectionForm from './NewElectionForm';
 import JumboHead from './JumboHead';

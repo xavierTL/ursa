@@ -3,7 +3,7 @@ import { Jumbotron, Image } from 'react-bootstrap';
 
 const JumboHead = ({ text, sub, imgId }) => {
   return (
-    <Jumbotron>
+    <Jumbotron className="jumbo">
       <div className="jumbo-outer">
         <div className="title">
           <h1>{text}</h1>

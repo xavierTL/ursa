@@ -1,4 +1,4 @@
-import { Navbar } from 'react-bootstrap';
+import { Navbar, Image } from 'react-bootstrap';
 import React, { Component } from 'react';
 import '../App.css';
 import { Link } from '@reach/router';
@@ -18,7 +18,7 @@ class Nav extends Component {
           <Link to="new-election">New Election</Link>
         </Navbar.Text>
         <Navbar.Collapse>
-          <Navbar.Text pullRight>{`user: ${user}`}</Navbar.Text>
+          <Navbar.Text pullRight>{`User: ${user}`}</Navbar.Text>
         </Navbar.Collapse>
       </Navbar>
     );
