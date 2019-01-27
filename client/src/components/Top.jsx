@@ -7,7 +7,7 @@ class Top extends Component {
       <div className="logo-cont">
         <Image
           src="https://image.flaticon.com/icons/svg/1346/1346537.svg"
-          circle
+          // src="https://image.flaticon.com/icons/svg/281/281326.svg"
           className="spin logo"
         />
       </div>
