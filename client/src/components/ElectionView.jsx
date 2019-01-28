@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import JumboHead from './JumboHead';
 import ReviewTable from './ReviewTable';
-import { Well, Tabs, Tab } from 'react-bootstrap';
+import { Well, Tabs, Tab, Alert } from 'react-bootstrap';
 
 const moment = require('moment');
 
@@ -10,7 +10,8 @@ class ElectionView extends Component {
     loading: true,
     electionData: {},
     whiteList: [],
-    candidates: []
+    candidates: [],
+    registered: false
   };
   render() {
     const {
@@ -31,29 +32,33 @@ class ElectionView extends Component {
             <JumboHead
               imgId={open ? '1346564' : '1346540'}
               text={electionName}
-              sub={open ? 'Polls open.' : 'Polls not open.'}
             />
-            <Well>
-              <div className="alert-bar">
-                <div className="alert">
-                  <strong>Start time:</strong>
-                  {` ${start}`}
-                </div>
-                <div className="alert">
-                  <strong>End time:</strong>
-                  {` ${end}`}
-                </div>
-              </div>
-            </Well>
-            <Tabs defaultActiveKey={2} id="uncontrolled-tab-example">
-              <Tab eventKey={1} title="Tab 1">
-                Tab 1 content
+            <Alert bsStyle={open ? 'success' : 'danger'}>
+              {open ? 'Polls open' : 'Polls closed'}
+            </Alert>
+            <Tabs defaultActiveKey={1} id="uncontrolled-tab-example">
+              <Tab eventKey={1} title="Vote">
+                {open ? 'Polls open' : 'Polls closed - check the results tab.'}
               </Tab>
               <Tab eventKey={2} title="Candidates">
-                <ReviewTable data="Candidates" dataArray={candidates} />
+                <ReviewTable data="Names" dataArray={candidates} />
               </Tab>
-              <Tab eventKey={3} title="Voters">
+              <Tab eventKey={3} title="Registry">
                 <ReviewTable data="Addresses" dataArray={whiteList} />
+              </Tab>
+              <Tab eventKey={4} title="Start/End">
+                <Well>
+                  <div className="alert-bar">
+                    <div className="alert">
+                      <strong>Start time:</strong>
+                      {` ${start}`}
+                    </div>
+                    <div className="alert">
+                      <strong>End time:</strong>
+                      {` ${end}`}
+                    </div>
+                  </div>
+                </Well>
               </Tab>
             </Tabs>
           </>
@@ -63,23 +68,45 @@ class ElectionView extends Component {
   }
 
   componentDidMount = async () => {
-    const { methods } = this.props.drizzle.contracts.ElectionManager;
+    // const { methods } = this.props.drizzle.contracts.ElectionManager;
     // console.log(await methods.smokeTest().call());
     this.fetchElectionData();
   };
 
   fetchElectionData = async () => {
-    const { methods } = this.props.drizzle.contracts.ElectionManager;
     const { id } = this.props;
+    const { methods } = this.props.drizzle.contracts.ElectionManager;
     const electionData = await methods.elections(id).call();
     const whiteList = await methods.getRegistry(id).call();
-    const candidates = await methods.getElectionCandidates(id).call();
-    console.log(candidates);
+    this.checkRegistry(whiteList);
+    this.fetchCandidates();
     this.setState({ electionData, whiteList, loading: false });
+  };
+
+  fetchCandidates = async () => {
+    const { id } = this.props;
+    const { methods } = this.props.drizzle.contracts.ElectionManager;
+    const candidatesIds = await methods.getElectionCandidates(id).call();
+    let promiseArray = [];
+    for (let i = 0; i < candidatesIds.length; i++) {
+      promiseArray.push(methods.getCandidate(candidatesIds[i]).call());
+    }
+    Promise.all(promiseArray).then(candidates =>
+      this.setState({ candidates: candidates.map(cand => cand['1']) })
+    );
   };
 
   humanize = timeStamp => {
     return moment.unix(timeStamp).format('dddd, MMMM Do YYYY, h:mm:ss a');
+  };
+
+  checkRegistry = whiteList => {
+    let user = this.props.drizzle.web3.eth.accounts.givenProvider
+      .selectedAddress;
+    whiteList = whiteList.map(x => x.toLowerCase());
+    user = user.toLowerCase();
+    let registered = whiteList.includes(user);
+    this.setState({ registered });
   };
 }
 
