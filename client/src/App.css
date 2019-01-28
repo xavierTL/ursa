@@ -95,6 +95,7 @@
 .new-election-logo,
 .icon-cont {
   flex: 1;
+  padding-right: 10vw;
 }
 
 .new-election-form {

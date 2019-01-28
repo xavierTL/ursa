@@ -6,7 +6,7 @@ const Woops = () => {
     <JumboHead
       imgId="1346557"
       text="Welcome to Ursa!"
-      sub="A blockchain election-management platform."
+      sub="Election software built on the Ethereum blockchain."
     />
   );
 };

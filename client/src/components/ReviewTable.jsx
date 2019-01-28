@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table, Badge } from 'react-bootstrap';
 
-const ReviewTable = ({ data, dataArray, creators }) => {
+const ReviewTable = ({ data, dataArray }) => {
   return (
     <Table striped responsive className="table pad">
       <thead>

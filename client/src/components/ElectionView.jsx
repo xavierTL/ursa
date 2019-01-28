@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import JumboHead from './JumboHead';
-import { Well } from 'react-bootstrap';
+import ReviewTable from './ReviewTable';
+import { Well, Tabs, Tab } from 'react-bootstrap';
 
 const moment = require('moment');
 
 class ElectionView extends Component {
   state = {
     loading: true,
-    electionData: {}
+    electionData: {},
+    whiteList: [],
+    candidates: []
   };
   render() {
     const {
@@ -16,7 +19,7 @@ class ElectionView extends Component {
       startTime,
       endTime
     } = this.state.electionData;
-    const { loading } = this.state;
+    const { loading, whiteList, candidates } = this.state;
     const now = moment(new Date()).unix();
     const open = now > startTime && now < endTime;
     const start = this.humanize(startTime);
@@ -42,6 +45,17 @@ class ElectionView extends Component {
                 </div>
               </div>
             </Well>
+            <Tabs defaultActiveKey={2} id="uncontrolled-tab-example">
+              <Tab eventKey={1} title="Tab 1">
+                Tab 1 content
+              </Tab>
+              <Tab eventKey={2} title="Candidates">
+                <ReviewTable data="Candidates" dataArray={candidates} />
+              </Tab>
+              <Tab eventKey={3} title="Voters">
+                <ReviewTable data="Addresses" dataArray={whiteList} />
+              </Tab>
+            </Tabs>
           </>
         )}
       </>
@@ -58,9 +72,12 @@ class ElectionView extends Component {
     const { methods } = this.props.drizzle.contracts.ElectionManager;
     const { id } = this.props;
     const electionData = await methods.elections(id).call();
-    console.log(electionData);
-    this.setState({ electionData, loading: false });
+    const whiteList = await methods.getRegistry(id).call();
+    const candidates = await methods.getElectionCandidates(id).call();
+    console.log(candidates);
+    this.setState({ electionData, whiteList, loading: false });
   };
+
   humanize = timeStamp => {
     return moment.unix(timeStamp).format('dddd, MMMM Do YYYY, h:mm:ss a');
   };
