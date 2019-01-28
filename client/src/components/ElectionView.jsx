@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import JumboHead from './JumboHead';
 import ReviewTable from './ReviewTable';
-import { Well, Tabs, Tab, Alert } from 'react-bootstrap';
+import StartEnd from './StartEnd';
+import { Tabs, Tab, Alert } from 'react-bootstrap';
 
 const moment = require('moment');
 
@@ -20,7 +21,7 @@ class ElectionView extends Component {
       startTime,
       endTime
     } = this.state.electionData;
-    const { loading, whiteList, candidates } = this.state;
+    const { loading, whiteList, candidates, registered } = this.state;
     const now = moment(new Date()).unix();
     const open = now > startTime && now < endTime;
     const start = this.humanize(startTime);
@@ -38,7 +39,7 @@ class ElectionView extends Component {
             </Alert>
             <Tabs defaultActiveKey={1} id="uncontrolled-tab-example">
               <Tab eventKey={1} title="Vote">
-                {open ? 'Polls open' : 'Polls closed - check the results tab.'}
+                VOTE
               </Tab>
               <Tab eventKey={2} title="Candidates">
                 <ReviewTable data="Names" dataArray={candidates} />
@@ -47,18 +48,7 @@ class ElectionView extends Component {
                 <ReviewTable data="Addresses" dataArray={whiteList} />
               </Tab>
               <Tab eventKey={4} title="Start/End">
-                <Well>
-                  <div className="alert-bar">
-                    <div className="alert">
-                      <strong>Start time:</strong>
-                      {` ${start}`}
-                    </div>
-                    <div className="alert">
-                      <strong>End time:</strong>
-                      {` ${end}`}
-                    </div>
-                  </div>
-                </Well>
+                <StartEnd start={start} end={end} />
               </Tab>
             </Tabs>
           </>
