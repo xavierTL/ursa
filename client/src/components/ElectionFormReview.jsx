@@ -1,10 +1,10 @@
 import React from 'react';
-import { Button, Table } from 'react-bootstrap';
+import { Button, Table, Well } from 'react-bootstrap';
 import ReviewTable from './ReviewTable';
 const moment = require('moment');
 
 const ElectionFormReview = ({ toggleCompleted, electionData }) => {
-  const { title, stringStart, stringEnd, candidates, voters } = electionData;
+  const { title, stringStart, stringEnd, voters } = electionData;
   let start = JSON.parse(stringStart);
   let end = JSON.parse(stringEnd);
   start = moment(start).format('dddd, MMMM Do YYYY, h:mm:ss a');
@@ -27,8 +27,8 @@ const ElectionFormReview = ({ toggleCompleted, electionData }) => {
           </tr>
         </tbody>
       </Table>
-      <ReviewTable data={'Candidates'} dataArray={candidates} />
       <ReviewTable data={'Voters'} dataArray={voters} />
+      <Well>You'll get to add candidates later!</Well>
       <Button onClick={() => toggleCompleted()}>Launch!</Button>
     </>
   );

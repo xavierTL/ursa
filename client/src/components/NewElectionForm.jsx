@@ -3,7 +3,6 @@ import { ProgressBar, Button, Pager } from 'react-bootstrap';
 import NewElectionHeader from './NewElectionHeader';
 import ElectionTitle from './NewElectionForm/ElectionTitle';
 import ElectionTimes from './NewElectionForm/ElectionTimes';
-import ElectionCandidates from './NewElectionForm/ElectionCandidates';
 import ElectionVoters from './NewElectionForm/ElectionVoters';
 import ElectionFormReview from './ElectionFormReview';
 const moment = require('moment');
@@ -15,9 +14,6 @@ class NewElectionForm extends Component {
     startDate: null,
     endDate: null,
     timesDone: false,
-    candidates: [],
-    currentCand: '',
-    candsDone: false,
     voters: [],
     currentVoter: '',
     votersDone: false,
@@ -30,9 +26,6 @@ class NewElectionForm extends Component {
       title,
       titleDone,
       timesDone,
-      candidates,
-      currentCand,
-      candsDone,
       currentVoter,
       voters,
       votersDone,
@@ -43,12 +36,11 @@ class NewElectionForm extends Component {
       tx
     } = this.state;
     let now =
-      [titleDone, timesDone, candsDone, votersDone, completed].filter(
-        x => x === true
-      ).length * 20;
+      [titleDone, timesDone, votersDone, completed].filter(x => x === true)
+        .length * 25;
     const stringStart = JSON.stringify(startDate);
     const stringEnd = JSON.stringify(endDate);
-    const electionData = { title, candidates, voters, stringStart, stringEnd };
+    const electionData = { title, voters, stringStart, stringEnd };
     return (
       <div>
         <NewElectionHeader review={review} title={title} tx={tx} />
@@ -84,14 +76,14 @@ class NewElectionForm extends Component {
                 setTimes={this.setTimes}
                 timesDone={timesDone}
               />
-              <ElectionCandidates
+              {/* <ElectionCandidates
                 getCandValidationState={this.getCandValidationState}
                 currentCand={currentCand}
                 handleCandidateChange={this.handleCandidateChange}
                 addCandidate={this.addCandidate}
                 candidates={candidates}
                 setCandidates={this.setCandidates}
-              />
+              /> */}
               <ElectionVoters
                 getVoterValidationState={this.getVoterValidationState}
                 currentVoter={currentVoter}
@@ -101,7 +93,7 @@ class NewElectionForm extends Component {
                 setVoters={this.setVoters}
               />
             </form>
-            {now === 80 ? (
+            {now === 75 ? (
               <Button
                 onClick={() => this.toggleReview()}
                 bsSize="large"
@@ -132,13 +124,13 @@ class NewElectionForm extends Component {
   };
 
   launchElection = async () => {
-    const { title, candidates, voters, startDate, endDate } = this.state;
+    const { title, voters, startDate, endDate } = this.state;
     const { methods } = this.props.drizzle.contracts.ElectionManager;
     const startUnix = moment(startDate).unix();
     const endUnix = moment(endDate).unix();
     console.log(startUnix, endUnix);
     const id = await methods
-      .startElection(title, startUnix, endUnix, candidates[0], voters)
+      .startElection(title, startUnix, endUnix, 'Spoil ballot.', voters)
       .send();
     this.setState({ tx: id.transactionHash });
   };
@@ -197,30 +189,30 @@ class NewElectionForm extends Component {
     this.setState({ timesDone: !timesDone });
   };
 
-  handleCandidateChange = e => {
-    this.setState({ currentCand: e.target.value });
-  };
+  // handleCandidateChange = e => {
+  //   this.setState({ currentCand: e.target.value });
+  // };
 
-  getCandValidationState = () => {
-    const { currentCand, candsDone } = this.state;
-    if (currentCand.length >= 5 || candsDone) return 'success';
-    return 'warning';
-  };
+  // getCandValidationState = () => {
+  //   const { currentCand, candsDone } = this.state;
+  //   if (currentCand.length >= 5 || candsDone) return 'success';
+  //   return 'warning';
+  // };
 
-  addCandidate = () => {
-    const { candidates, currentCand } = this.state;
-    if (currentCand.length >= 5) {
-      candidates.push(currentCand);
-      this.setState({ candidates, currentCand: '' });
-    }
-  };
+  // addCandidate = () => {
+  //   const { candidates, currentCand } = this.state;
+  //   if (currentCand.length >= 5) {
+  //     candidates.push(currentCand);
+  //     this.setState({ candidates, currentCand: '' });
+  //   }
+  // };
 
-  setCandidates = () => {
-    const { candsDone, candidates } = this.state;
-    if (candidates.length) {
-      this.setState({ candsDone: !candsDone });
-    }
-  };
+  // setCandidates = () => {
+  //   const { candsDone, candidates } = this.state;
+  //   if (candidates.length) {
+  //     this.setState({ candsDone: !candsDone });
+  //   }
+  // };
 
   getVoterValidationState = () => {
     const { currentVoter, votersDone } = this.state;
