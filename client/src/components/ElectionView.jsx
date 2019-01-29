@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import JumboHead from './JumboHead';
 import ReviewTable from './ReviewTable';
-import AddElectionCandidates from './NewElectionForm/AddElectionCandidates';
+import AddElectionCandidates from './AddElectionCandidates';
 import StartEnd from './StartEnd';
-import { Tabs, Tab, Alert, Button } from 'react-bootstrap';
+import { Tabs, Tab, Alert } from 'react-bootstrap';
 
 const moment = require('moment');
 
@@ -11,19 +11,13 @@ class ElectionView extends Component {
   state = {
     loading: true,
     electionData: {},
-    creator: '',
     whiteList: [],
     candidates: [],
     registered: false,
     owner: false
   };
   render() {
-    const {
-      electionName,
-      creator,
-      startTime,
-      endTime
-    } = this.state.electionData;
+    const { electionName, startTime, endTime } = this.state.electionData;
     const { loading, whiteList, candidates, registered, owner } = this.state;
     const now = moment(new Date()).unix();
     const open = now > startTime && now < endTime;

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReviewTable from './ReviewTable';
 import {
   FormGroup,
   FormControl,
@@ -13,10 +14,17 @@ class AddElectionCandidates extends Component {
     currentCand: ''
   };
   render() {
-    const { electionId } = this.props;
-    const { currentCand } = this.state;
+    const { currentCand, newCandidates } = this.state;
     return (
       <>
+        {newCandidates.length ? (
+          <>
+            <ReviewTable data="New Candidates" dataArray={newCandidates} />
+            <Button onClick={() => this.registerCandidates()}>
+              Register New Candidates
+            </Button>
+          </>
+        ) : null}
         <FormGroup
           controlId="formBasicText"
           validationState={this.getCandValidationState()}
@@ -38,7 +46,13 @@ class AddElectionCandidates extends Component {
     );
   }
 
+  componentDidMount() {
+    // const { methods } = this.props.drizzle.contracts.ElectionManager;
+    // console.log(await methods.smokeTest().call());
+  }
+
   handleCandidateChange = e => {
+    console.log(e.target.value);
     this.setState({ currentCand: e.target.value });
   };
 
@@ -53,8 +67,20 @@ class AddElectionCandidates extends Component {
     if (currentCand.length >= 5) {
       newCandidates.push(currentCand);
       this.setState({ newCandidates, currentCand: '' });
-      console.log(newCandidates);
     }
+  };
+
+  registerCandidates = async () => {
+    const { methods } = this.props.drizzle.contracts.ElectionManager;
+    const { newCandidates } = this.state;
+    const { electionId } = this.props;
+    const promiseArray = [];
+    for (let i = 0; i < newCandidates.length; i++) {
+      promiseArray.push(
+        methods.addNewCandidate(electionId, newCandidates[i]).send()
+      );
+    }
+    Promise.all(promiseArray);
   };
 }
 

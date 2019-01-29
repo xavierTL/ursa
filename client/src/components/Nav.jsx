@@ -1,4 +1,4 @@
-import { Navbar, Image } from 'react-bootstrap';
+import { Navbar } from 'react-bootstrap';
 import React, { Component } from 'react';
 import '../App.css';
 import { Link } from '@reach/router';
