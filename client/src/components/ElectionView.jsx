@@ -4,6 +4,7 @@ import ReviewTable from './ReviewTable';
 import AddElectionCandidates from './AddElectionCandidates';
 import StartEnd from './StartEnd';
 import Results from './Results';
+import Voter from './Voter';
 import { Tabs, Tab, Alert } from 'react-bootstrap';
 
 const moment = require('moment');
@@ -36,24 +37,24 @@ class ElectionView extends Component {
             <Alert bsStyle={open ? 'success' : 'danger'}>
               {open ? 'Polls open' : 'Polls closed'}
             </Alert>
-            <Tabs defaultActiveKey={5} id="uncontrolled-tab-example">
-              {registered ? (
-                <Tab eventKey={1} title="Vote">
-                  VOTE COMPONENT HERE
-                </Tab>
-              ) : null}
-              <Tab eventKey={2} title="Candidates">
+            <Tabs defaultActiveKey={2} id="uncontrolled-tab-example">
+              <Tab eventKey={1} title="Candidates">
                 <ReviewTable
                   data="Currently Registered"
                   dataArray={candidates.map(cand => cand[1][1])}
                 />
-                {owner && now < end ? (
+                {owner && now < endTime ? (
                   <AddElectionCandidates
                     electionId={this.props.id}
                     drizzle={this.props.drizzle}
                   />
                 ) : null}
               </Tab>
+              {registered ? (
+                <Tab eventKey={2} title="Vote">
+                  <Voter />
+                </Tab>
+              ) : null}
               <Tab eventKey={3} title="Registry">
                 <ReviewTable data="Addresses" dataArray={whiteList} />
               </Tab>

@@ -52,7 +52,6 @@ class AddElectionCandidates extends Component {
   }
 
   handleCandidateChange = e => {
-    console.log(e.target.value);
     this.setState({ currentCand: e.target.value });
   };
 
