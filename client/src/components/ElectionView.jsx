@@ -67,6 +67,7 @@ class ElectionView extends Component {
                   <Voter
                     refresh={this.fetchCandidates}
                     candidates={candidates}
+                    drizzle={this.props.drizzle}
                   />
                 </Tab>
               ) : null}
@@ -140,7 +141,7 @@ class ElectionView extends Component {
     const result = data.reduce((acc, val) => {
       let cand = {
         key: val[1][1],
-        value: val[2][1] + 1
+        value: val[2][1]
       };
       acc.push(cand);
       return acc;

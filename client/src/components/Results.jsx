@@ -1,5 +1,5 @@
 import React from 'react';
-import { PieChart } from 'react-easy-chart';
+import { PieChart, Legend } from 'react-easy-chart';
 import { Table } from 'react-bootstrap';
 
 const Results = ({ pieData }) => {
@@ -24,7 +24,8 @@ const Results = ({ pieData }) => {
         </Table>
       </div>
       <div className="f-two pad">
-        <PieChart size={300} labels innerHoleSize={150} data={pieData} />
+        <PieChart size={300} innerHoleSize={150} data={pieData} />
+        <Legend data={pieData} dataId={'key'} horizontal />
       </div>
     </div>
   );

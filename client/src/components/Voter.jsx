@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert } from 'react-bootstrap';
+import { Form, Button, Alert } from 'react-bootstrap';
 
 class Voter extends Component {
   state = {
@@ -7,10 +7,13 @@ class Voter extends Component {
   };
   render() {
     const { voted } = this.state;
+    const { candidates } = this.props;
     return (
       <>
-        {voted ? (
-          <></>
+        {!voted ? (
+          <>
+            ; ;<Button onClick={() => this.castVote()}>Submit Vote</Button>
+          </>
         ) : (
           <Alert bsStyle="success">
             You voted! Head to Results to see how it's going.
@@ -19,6 +22,15 @@ class Voter extends Component {
       </>
     );
   }
+
+  componentDidMount() {
+    this.castVote();
+  }
+
+  castVote = async candId => {
+    const { methods } = this.props.drizzle.contracts.ElectionManager;
+    const { electionId, refresh } = this.props;
+  };
 }
 
 export default Voter;
