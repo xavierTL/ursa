@@ -158,3 +158,15 @@
 .table {
   text-align: left;
 }
+
+.flex {
+  display: flex;
+}
+
+.f-one {
+  flex: 1;
+}
+
+.f-two {
+  flex: 2;
+}

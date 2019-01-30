@@ -3,8 +3,8 @@ import JumboHead from './JumboHead';
 import ReviewTable from './ReviewTable';
 import AddElectionCandidates from './AddElectionCandidates';
 import StartEnd from './StartEnd';
+import Results from './Results';
 import { Tabs, Tab, Alert } from 'react-bootstrap';
-import { PieChart, Legend } from 'react-easy-chart';
 
 const moment = require('moment');
 
@@ -61,12 +61,7 @@ class ElectionView extends Component {
                 <StartEnd start={start} end={end} />
               </Tab>
               <Tab eventKey={5} title="Results">
-                <PieChart
-                  size={300}
-                  labels
-                  innerHoleSize={150}
-                  data={pieData}
-                />
+                <Results pieData={pieData} />
               </Tab>
             </Tabs>
           </>
@@ -76,8 +71,6 @@ class ElectionView extends Component {
   }
 
   componentDidMount = async () => {
-    // const { methods } = this.props.drizzle.contracts.ElectionManager;
-    // console.log(await methods.smokeTest().call());
     this.fetchElectionData();
   };
 
@@ -133,7 +126,6 @@ class ElectionView extends Component {
       acc.push(cand);
       return acc;
     }, []);
-    console.log(result);
     return result;
   };
 
