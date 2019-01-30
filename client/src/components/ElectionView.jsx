@@ -16,13 +16,19 @@ class ElectionView extends Component {
     whiteList: [],
     candidates: [],
     registered: false,
-    owner: false
+    owner: false,
+    status: 'closed'
   };
   render() {
     const { electionName, startTime, endTime } = this.state.electionData;
-    const { loading, whiteList, candidates, registered, owner } = this.state;
-    const now = moment(new Date()).unix();
-    const open = now > startTime && now < endTime;
+    const {
+      loading,
+      whiteList,
+      candidates,
+      registered,
+      owner,
+      status
+    } = this.state;
     const start = this.humanize(startTime);
     const end = this.humanize(endTime);
     const pieData = this.formatCandidateData(candidates);
@@ -31,19 +37,25 @@ class ElectionView extends Component {
         {loading ? null : (
           <>
             <JumboHead
-              imgId={open ? '1346564' : '1346540'}
+              imgId={status === 'open' ? '1346564' : '1346540'}
               text={electionName}
             />
-            <Alert bsStyle={open ? 'success' : 'danger'}>
-              {open ? 'Polls open' : 'Polls closed'}
-            </Alert>
+            {status === 'notOpenYet' && (
+              <Alert bsStyle="warning">{`Election opens at ${start}`}</Alert>
+            )}
+            {status === 'open' && (
+              <Alert bsStyle="success">{`Election open, closes at ${end}`}</Alert>
+            )}
+            {status === 'closed' && (
+              <Alert bsStyle="danger">{`Election closed at ${end}`}</Alert>
+            )}
             <Tabs defaultActiveKey={2} id="uncontrolled-tab-example">
               <Tab eventKey={1} title="Candidates">
                 <ReviewTable
-                  data="Currently Registered"
+                  data="Current Candidates"
                   dataArray={candidates.map(cand => cand[1][1])}
                 />
-                {owner && now < endTime ? (
+                {owner && status !== 'closed' ? (
                   <AddElectionCandidates
                     electionId={this.props.id}
                     drizzle={this.props.drizzle}
@@ -52,16 +64,17 @@ class ElectionView extends Component {
               </Tab>
               {registered ? (
                 <Tab eventKey={2} title="Vote">
-                  <Voter />
+                  <Voter
+                    refresh={this.fetchCandidates}
+                    candidates={candidates}
+                  />
                 </Tab>
               ) : null}
               <Tab eventKey={3} title="Registry">
                 <ReviewTable data="Addresses" dataArray={whiteList} />
               </Tab>
-              <Tab eventKey={4} title="Start/End">
+              <Tab eventKey={4} title="Results">
                 <StartEnd start={start} end={end} />
-              </Tab>
-              <Tab eventKey={5} title="Results">
                 <Results pieData={pieData} />
               </Tab>
             </Tabs>
@@ -75,6 +88,15 @@ class ElectionView extends Component {
     this.fetchElectionData();
   };
 
+  determineStatus = () => {
+    const now = moment(new Date()).unix();
+    const { startTime, endTime } = this.state.electionData;
+    let status = 'notOpenYet';
+    if (now > endTime) status = 'closed';
+    if (now > startTime) status = 'open';
+    this.setState({ status });
+  };
+
   fetchElectionData = async () => {
     const { id } = this.props;
     const { methods } = this.props.drizzle.contracts.ElectionManager;
@@ -85,7 +107,9 @@ class ElectionView extends Component {
     const user = this.props.drizzle.web3.eth.accounts.givenProvider
       .selectedAddress;
     const owner = user.toLowerCase() === electionData.creator.toLowerCase();
-    this.setState({ electionData, whiteList, loading: false, owner });
+    this.setState({ electionData, whiteList, loading: false, owner }, () => {
+      this.determineStatus();
+    });
   };
 
   fetchCandidates = async () => {
@@ -97,15 +121,9 @@ class ElectionView extends Component {
       promiseArray.push(methods.getCandidate(candidatesIds[i]).call());
     }
     Promise.all(promiseArray).then(candidates => {
-      this.setState(
-        {
-          candidates: candidates.map(cand => Object.entries(cand))
-        },
-        () => {
-          const { candidates } = this.state;
-          this.formatCandidateData(candidates);
-        }
-      );
+      this.setState({
+        candidates: candidates.map(cand => Object.entries(cand))
+      });
     });
   };
 
