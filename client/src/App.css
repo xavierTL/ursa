@@ -31,7 +31,8 @@
 }
 
 .logo {
-  width: 90px;
+  width: 40px;
+  height: 40px;
 }
 
 .spin {
@@ -45,6 +46,34 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav-inner {
+  display: flex;
+  justify-content: space-between;
+}
+
+.nav-wide {
+  flex: 2;
+  display: flex;
+}
+
+.end {
+  justify-content: flex-end;
+}
+
+.start {
+  justify-content: flex-start;
+}
+
+.nav-narrow {
+  flex: 0.5;
 }
 
 .nav-bar,

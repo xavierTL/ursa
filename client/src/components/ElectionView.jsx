@@ -4,6 +4,7 @@ import ReviewTable from './ReviewTable';
 import AddElectionCandidates from './AddElectionCandidates';
 import StartEnd from './StartEnd';
 import { Tabs, Tab, Alert } from 'react-bootstrap';
+import { PieChart, Legend } from 'react-easy-chart';
 
 const moment = require('moment');
 
@@ -23,6 +24,7 @@ class ElectionView extends Component {
     const open = now > startTime && now < endTime;
     const start = this.humanize(startTime);
     const end = this.humanize(endTime);
+    const pieData = this.formatCandidateData(candidates);
     return (
       <>
         {loading ? null : (
@@ -34,7 +36,7 @@ class ElectionView extends Component {
             <Alert bsStyle={open ? 'success' : 'danger'}>
               {open ? 'Polls open' : 'Polls closed'}
             </Alert>
-            <Tabs defaultActiveKey={2} id="uncontrolled-tab-example">
+            <Tabs defaultActiveKey={5} id="uncontrolled-tab-example">
               {registered ? (
                 <Tab eventKey={1} title="Vote">
                   VOTE COMPONENT HERE
@@ -43,9 +45,9 @@ class ElectionView extends Component {
               <Tab eventKey={2} title="Candidates">
                 <ReviewTable
                   data="Currently Registered"
-                  dataArray={candidates}
+                  dataArray={candidates.map(cand => cand[1][1])}
                 />
-                {owner ? (
+                {owner && now < end ? (
                   <AddElectionCandidates
                     electionId={this.props.id}
                     drizzle={this.props.drizzle}
@@ -59,7 +61,12 @@ class ElectionView extends Component {
                 <StartEnd start={start} end={end} />
               </Tab>
               <Tab eventKey={5} title="Results">
-                RESULTS COMPONENT HERE
+                <PieChart
+                  size={300}
+                  labels
+                  innerHoleSize={150}
+                  data={pieData}
+                />
               </Tab>
             </Tabs>
           </>
@@ -95,9 +102,17 @@ class ElectionView extends Component {
     for (let i = 0; i < candidatesIds.length; i++) {
       promiseArray.push(methods.getCandidate(candidatesIds[i]).call());
     }
-    Promise.all(promiseArray).then(candidates =>
-      this.setState({ candidates: candidates.map(cand => cand['1']) })
-    );
+    Promise.all(promiseArray).then(candidates => {
+      this.setState(
+        {
+          candidates: candidates.map(cand => Object.entries(cand))
+        },
+        () => {
+          const { candidates } = this.state;
+          this.formatCandidateData(candidates);
+        }
+      );
+    });
   };
 
   checkRegistry = whiteList => {
@@ -107,6 +122,19 @@ class ElectionView extends Component {
     user = user.toLowerCase();
     let registered = whiteList.includes(user);
     this.setState({ registered });
+  };
+
+  formatCandidateData = data => {
+    const result = data.reduce((acc, val) => {
+      let cand = {
+        key: val[1][1],
+        value: val[2][1] + 1
+      };
+      acc.push(cand);
+      return acc;
+    }, []);
+    console.log(result);
+    return result;
   };
 
   humanize = timeStamp => {

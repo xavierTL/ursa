@@ -20,7 +20,7 @@ class App extends Component {
     const { drizzle } = this.props;
     return (
       <div className="App">
-        <Top />
+        {/* <Top /> */}
         <div className="main-cont">
           {loading ? null : (
             <>

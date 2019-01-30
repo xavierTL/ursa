@@ -4,7 +4,7 @@ import JumboHead from './JumboHead';
 const Woops = () => {
   return (
     <JumboHead
-      imgId="1346557"
+      imgId="1346549"
       text="Welcome to Ursa!"
       sub="Election software built on the Ethereum blockchain."
     />

@@ -45,65 +45,64 @@ class NewElectionForm extends Component {
       <div>
         <NewElectionHeader review={review} title={title} tx={tx} />
         <ProgressBar now={now} active label={`${now}%`} />
-        {review ? (
-          <div className="new-election-form">
-            <Pager>
-              <Pager.Item previous onClick={() => this.toggleReview()}>
-                &larr; Go back
-              </Pager.Item>
-            </Pager>
-            <ElectionFormReview
-              toggleCompleted={this.toggleCompleted}
-              electionData={electionData}
-              now={now}
-            />
-          </div>
-        ) : (
+        {!tx.length ? (
           <>
-            <form className="new-election-form">
-              <ElectionTitle
-                title={title}
-                getValidationState={this.getValidationState}
-                handleTitleChange={this.handleTitleChange}
-              />
-              <ElectionTimes
-                getStartTimeValidationState={this.getStartTimeValidationState}
-                startChange={this.startChange}
-                startDate={startDate}
-                getEndTimeValidationState={this.getEndTimeValidationState}
-                endChange={this.endChange}
-                endDate={endDate}
-                setTimes={this.setTimes}
-                timesDone={timesDone}
-              />
-              {/* <ElectionCandidates
-                getCandValidationState={this.getCandValidationState}
-                currentCand={currentCand}
-                handleCandidateChange={this.handleCandidateChange}
-                addCandidate={this.addCandidate}
-                candidates={candidates}
-                setCandidates={this.setCandidates}
-              /> */}
-              <ElectionVoters
-                getVoterValidationState={this.getVoterValidationState}
-                currentVoter={currentVoter}
-                handleVoterChange={this.handleVoterChange}
-                addVoter={this.addVoter}
-                voters={voters}
-                setVoters={this.setVoters}
-              />
-            </form>
-            {now === 75 ? (
-              <Button
-                onClick={() => this.toggleReview()}
-                bsSize="large"
-                bsStyle="primary"
-              >
-                REVIEW
-              </Button>
-            ) : null}
+            {review ? (
+              <div className="new-election-form">
+                <Pager>
+                  <Pager.Item previous onClick={() => this.toggleReview()}>
+                    &larr; Go back
+                  </Pager.Item>
+                </Pager>
+                <ElectionFormReview
+                  toggleCompleted={this.toggleCompleted}
+                  electionData={electionData}
+                  now={now}
+                />
+              </div>
+            ) : (
+              <>
+                <form className="new-election-form">
+                  <ElectionTitle
+                    title={title}
+                    getValidationState={this.getValidationState}
+                    handleTitleChange={this.handleTitleChange}
+                  />
+                  <ElectionTimes
+                    getStartTimeValidationState={
+                      this.getStartTimeValidationState
+                    }
+                    startChange={this.startChange}
+                    startDate={startDate}
+                    getEndTimeValidationState={this.getEndTimeValidationState}
+                    endChange={this.endChange}
+                    endDate={endDate}
+                    setTimes={this.setTimes}
+                    timesDone={timesDone}
+                  />
+
+                  <ElectionVoters
+                    getVoterValidationState={this.getVoterValidationState}
+                    currentVoter={currentVoter}
+                    handleVoterChange={this.handleVoterChange}
+                    addVoter={this.addVoter}
+                    voters={voters}
+                    setVoters={this.setVoters}
+                  />
+                </form>
+                {now === 75 ? (
+                  <Button
+                    onClick={() => this.toggleReview()}
+                    bsSize="large"
+                    bsStyle="primary"
+                  >
+                    REVIEW
+                  </Button>
+                ) : null}
+              </>
+            )}
           </>
-        )}
+        ) : null}
       </div>
     );
   }
@@ -128,7 +127,6 @@ class NewElectionForm extends Component {
     const { methods } = this.props.drizzle.contracts.ElectionManager;
     const startUnix = moment(startDate).unix();
     const endUnix = moment(endDate).unix();
-    console.log(startUnix, endUnix);
     const id = await methods
       .startElection(title, startUnix, endUnix, 'Spoil ballot.', voters)
       .send();
@@ -188,31 +186,6 @@ class NewElectionForm extends Component {
     if (startUnix + 3600 > endUnix) return;
     this.setState({ timesDone: !timesDone });
   };
-
-  // handleCandidateChange = e => {
-  //   this.setState({ currentCand: e.target.value });
-  // };
-
-  // getCandValidationState = () => {
-  //   const { currentCand, candsDone } = this.state;
-  //   if (currentCand.length >= 5 || candsDone) return 'success';
-  //   return 'warning';
-  // };
-
-  // addCandidate = () => {
-  //   const { candidates, currentCand } = this.state;
-  //   if (currentCand.length >= 5) {
-  //     candidates.push(currentCand);
-  //     this.setState({ candidates, currentCand: '' });
-  //   }
-  // };
-
-  // setCandidates = () => {
-  //   const { candsDone, candidates } = this.state;
-  //   if (candidates.length) {
-  //     this.setState({ candsDone: !candsDone });
-  //   }
-  // };
 
   getVoterValidationState = () => {
     const { currentVoter, votersDone } = this.state;
