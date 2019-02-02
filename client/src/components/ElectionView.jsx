@@ -65,6 +65,7 @@ class ElectionView extends Component {
               {registered ? (
                 <Tab eventKey={2} title="Vote">
                   <Voter
+                    electionId={this.props.id}
                     refresh={this.fetchCandidates}
                     candidates={candidates}
                     drizzle={this.props.drizzle}
