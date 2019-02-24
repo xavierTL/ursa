@@ -17,7 +17,7 @@ contract('ElectionManager', accounts => {
     electionCandidates = await instance.getElectionCandidates(1);
   });
 
-  describe('startElection', () => {
+  describe.only('startElection', () => {
     it('contract successfully compiles', async () => {
       const smokeTest = await instance.smokeTest();
       expect(smokeTest).to.eql('its working nicely');
@@ -35,17 +35,15 @@ contract('ElectionManager', accounts => {
         'startTime',
         'endTime'
       ]);
-      const startTime = await instance.setTimer(0);
-      const endTime = await instance.setTimer(100000);
 
       expect(testElection.creator).to.equal(accounts[0]);
       expect(testElection.electionName).to.equal('Test Election');
-      // given time tests 10 seconds of variation to accomodate block mining time.
-      expect(Math.floor(testElection.startTime.toNumber() / 10)).to.equal(
-        Math.floor(startTime.toNumber() / 10)
-      );
-      expect(Math.floor(testElection.endTime.toNumber() / 10)).to.equal(
-        Math.floor(endTime.toNumber() / 10)
+      // expect(testElection.startTime.toNumber()).to.equal(
+      //   Math.floor(Date.now() / 1000)
+      // );
+
+      expect(testElection.endTime.toNumber()).to.equal(
+        Math.floor(Date.now() / 1000) + 100000
       );
     });
     describe('getElectionCandidates', () => {

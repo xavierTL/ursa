@@ -29,8 +29,9 @@ contract ElectionManager is ERC20 {
 
     function startElection(string memory _electionName, uint _startTime, uint _endTime, string memory seedCandidate, address[] memory _whiteList) public returns (uint) {
         electionCount++;
-
-        elections[electionCount] = Election(msg.sender, _electionName, _startTime, _endTime, new uint[](0), new address[](0));
+        uint start = block.timestamp + _startTime;
+        uint end = block.timestamp + _endTime;
+        elections[electionCount] = Election(msg.sender, _electionName, start, end, new uint[](0), new address[](0));
         candidatesCount++;
         candidateIds.push(candidatesCount);
         candidateStorage[candidatesCount] = Candidate(
