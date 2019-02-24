@@ -7,13 +7,11 @@ contract('ElectionManager', accounts => {
   before(async () => {
     instance = await ElectionManager.deployed();
 
-    await instance.startElection(
-      'Test Election',
-      0,
-      100000,
-      'First Candidate',
-      [accounts[1], accounts[2], accounts[3]]
-    );
+    await instance.startElection('Test Election', 0, 100000, [
+      accounts[1],
+      accounts[2],
+      accounts[3]
+    ]);
     electionCandidates = await instance.getElectionCandidates(1);
   });
 
@@ -58,7 +56,7 @@ contract('ElectionManager', accounts => {
       it('returns an object containing numbered keys with corresponding candidate information', async () => {
         const electionCandidate = await instance.getCandidate(1);
         expect(electionCandidate['0'].toNumber()).to.equal(1);
-        expect(electionCandidate['1']).to.equal('First Candidate');
+        expect(electionCandidate['1']).to.equal('Spoil ballot');
         expect(electionCandidate['2'].toNumber()).to.equal(0);
       });
     });
@@ -92,10 +90,10 @@ contract('ElectionManager', accounts => {
 
   describe('addNewCandidate', () => {
     it('adds correct candidate data to election', async () => {
-      await instance.addNewCandidate(1, 'Second Candidate');
+      await instance.addNewCandidate(1, 'First Candidate');
       const newCandidate = await instance.getCandidate(2);
       expect(newCandidate['0'].toNumber()).to.equal(2);
-      expect(newCandidate['1']).to.equal('Second Candidate');
+      expect(newCandidate['1']).to.equal('First Candidate');
       expect(newCandidate['2'].toNumber()).to.equal(0);
     });
     it('updates candidate count accordingly', async () => {
