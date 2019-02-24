@@ -68,8 +68,8 @@ contract ElectionManager is ERC20 {
     }
 
     function voteForCandidate(uint _id, uint _electionId) public returns (uint, string memory, uint) {
-        require(elections[_electionId].endTime > block.timestamp, "The election has already ended.");
-        require(elections[_electionId].startTime < block.timestamp, "The election has not started yet.");
+        require(elections[_electionId].endTime >= block.timestamp, "The election has already ended.");
+        require(elections[_electionId].startTime <= block.timestamp, "The election has not started yet.");
         address[] memory array = getRegistry(_electionId);
         for (uint i = 0; i < array.length ; i++) {
             if(array[i] == msg.sender) {

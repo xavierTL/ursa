@@ -15,7 +15,7 @@ contract('ElectionManager', accounts => {
     electionCandidates = await instance.getElectionCandidates(1);
   });
 
-  describe.only('startElection', () => {
+  describe('startElection', () => {
     it('contract successfully compiles', async () => {
       const smokeTest = await instance.smokeTest();
       expect(smokeTest).to.eql('its working nicely');
@@ -139,13 +139,11 @@ contract('ElectionManager', accounts => {
       expect(voteCount.toNumber()).to.equal(1);
     });
     it('cannot vote after the election has ended', async () => {
-      await instance.startElection(
-        'Test Election Two',
-        0,
-        -100,
-        'Candidate Claire',
-        [accounts[1], accounts[2], accounts[3]]
-      );
+      await instance.startElection('Test Election Two', 0, -100, [
+        accounts[1],
+        accounts[2],
+        accounts[3]
+      ]);
       try {
         await instance.voteForCandidate(1, 2, { from: accounts[1] });
       } catch (error) {
@@ -153,13 +151,11 @@ contract('ElectionManager', accounts => {
       }
     });
     it('cannot vote before the election has started', async () => {
-      await instance.startElection(
-        'Test Election Three',
-        2000,
-        4000,
-        'Candidate Connor',
-        [accounts[1], accounts[2], accounts[3]]
-      );
+      await instance.startElection('Test Election Three', 2000, 4000, [
+        accounts[1],
+        accounts[2],
+        accounts[3]
+      ]);
       try {
         await instance.voteForCandidate(1, 3, { from: accounts[1] });
       } catch (error) {
@@ -170,13 +166,11 @@ contract('ElectionManager', accounts => {
 
   describe('registerVoter', () => {
     it('adds voter address to election whitelist', async () => {
-      await instance.startElection(
-        'Test Election Four',
-        300,
-        800,
-        'Candidate Chris',
-        [accounts[1], accounts[2], accounts[3]]
-      );
+      await instance.startElection('Test Election Four', 300, 800, [
+        accounts[1],
+        accounts[2],
+        accounts[3]
+      ]);
       await instance.registerVoter(4, accounts[4]);
       const whiteList = await instance.getRegistry(4);
       expect(whiteList.length).to.eql(4);
@@ -198,13 +192,11 @@ contract('ElectionManager', accounts => {
       }
     });
     it('voters cannot be added after start time', async () => {
-      await instance.startElection(
-        'Test Election Five',
-        0,
-        800,
-        'Candidate Ciara',
-        [accounts[1], accounts[2], accounts[3]]
-      );
+      await instance.startElection('Test Election Five', 0, 800, [
+        accounts[1],
+        accounts[2],
+        accounts[3]
+      ]);
       try {
         await instance.registerVoter(5, accounts[4]);
       } catch (error) {
