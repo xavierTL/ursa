@@ -38,13 +38,16 @@ contract('ElectionManager', accounts => {
 
       expect(testElection.creator).to.equal(accounts[0]);
       expect(testElection.electionName).to.equal('Test Election');
-      // expect(testElection.startTime.toNumber()).to.equal(
-      //   Math.floor(Date.now() / 1000)
-      // );
 
-      expect(testElection.endTime.toNumber()).to.equal(
-        Math.floor(Date.now() / 1000) + 100000
-      );
+      const now = Math.floor(Date.now() / 1000);
+
+      // allowing 10s of delay when testing start/end times to accommodate block timestamps.
+
+      const roughStart = Math.floor(testElection.startTime.toNumber() / 10);
+      const roughEnd = Math.floor(testElection.endTime.toNumber() / 10);
+
+      expect(roughStart).to.equal(Math.floor(now / 10));
+      expect(roughEnd).to.equal(Math.floor(now / 10) + 10000);
     });
     describe('getElectionCandidates', () => {
       it('returns an array containing the candidates id for a particular election', async () => {
