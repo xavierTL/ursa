@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { ProgressBar, Button, Pager } from 'react-bootstrap';
 import NewElectionHeader from './NewElectionHeader';
-import ElectionTitle from './NewElectionForm/ElectionTitle';
-import ElectionTimes from './NewElectionForm/ElectionTimes';
-import ElectionVoters from './NewElectionForm/ElectionVoters';
+import ElectionTitle from './ElectionTitle';
+import ElectionTimes from './ElectionTimes';
+import ElectionVoters from './ElectionVoters';
 import ElectionFormReview from './ElectionFormReview';
 const moment = require('moment');
 

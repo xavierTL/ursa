@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Nav from './components/Nav';
 import Top from './components/Top';
-import ElectionBuilder from './components/ElectionBuilder';
+import ElectionBuilder from './components/NewElection';
 import ElectionsDisplay from './components/ElectionsDisplay';
 import ElectionView from './components/ElectionView';
 import Woops from './components/Woops';

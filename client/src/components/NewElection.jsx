@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
-import InstructionsForm from './InstructionsForm';
-import NewElectionForm from './NewElectionForm';
+import InstructionsForm from './NewElectionForm/InstructionsForm';
+import NewElectionForm from './NewElectionForm/NewElectionForm';
 import JumboHead from './JumboHead';
 
 class ElectionBuilder extends Component {
@@ -25,9 +25,9 @@ class ElectionBuilder extends Component {
             />
 
             <InstructionsForm understand={this.understand} />
-            {understand ? (
+            {understand && (
               <Button onClick={() => this.showForm()}>let's go!</Button>
-            ) : null}
+            )}
           </>
         )}
       </div>

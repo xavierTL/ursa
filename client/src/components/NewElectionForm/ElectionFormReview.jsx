@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Table, Well } from 'react-bootstrap';
-import ReviewTable from './ReviewTable';
+import ReviewTable from '../ReviewTable';
 const moment = require('moment');
 
 const ElectionFormReview = ({ toggleCompleted, electionData }) => {
