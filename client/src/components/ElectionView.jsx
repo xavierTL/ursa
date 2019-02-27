@@ -49,20 +49,20 @@ class ElectionView extends Component {
             {status === 'closed' && (
               <Alert bsStyle="danger">{`Election closed at ${end}`}</Alert>
             )}
-            <Tabs defaultActiveKey={2} id="uncontrolled-tab-example">
+            <Tabs defaultActiveKey={1} id="uncontrolled-tab-example">
               <Tab eventKey={1} title="Candidates">
                 <ReviewTable
                   data="Current Candidates"
                   dataArray={candidates.map(cand => cand[1][1])}
                 />
-                {owner && status !== 'closed' ? (
+                {owner && status !== 'closed' && (
                   <AddElectionCandidates
                     electionId={this.props.id}
                     drizzle={this.props.drizzle}
                   />
-                ) : null}
+                )}
               </Tab>
-              {registered ? (
+              {registered && (
                 <Tab eventKey={2} title="Vote">
                   <Voter
                     electionId={this.props.id}
@@ -71,7 +71,7 @@ class ElectionView extends Component {
                     drizzle={this.props.drizzle}
                   />
                 </Tab>
-              ) : null}
+              )}
               <Tab eventKey={3} title="Registry">
                 <ReviewTable data="Addresses" dataArray={whiteList} />
               </Tab>

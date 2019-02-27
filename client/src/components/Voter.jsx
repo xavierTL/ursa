@@ -12,7 +12,7 @@ class Voter extends Component {
       <>
         {!voted ? (
           <>
-            ; ;<Button onClick={() => this.castVote()}>Submit Vote</Button>
+            <Button onClick={() => this.castVote()}>Submit Vote</Button>
           </>
         ) : (
           <Alert bsStyle="success">
