@@ -127,8 +127,10 @@ class NewElectionForm extends Component {
     const { methods } = this.props.drizzle.contracts.ElectionManager;
     const startUnix = moment(startDate).unix();
     const endUnix = moment(endDate).unix();
+    const now = Math.floor(Date.now() / 1000);
+    const start = startUnix - now;
     const id = await methods
-      .startElection(title, startUnix, endUnix, 'Spoil ballot.', voters)
+      .startElection(title, start, endUnix, voters)
       .send();
     this.setState({ tx: id.transactionHash });
   };
