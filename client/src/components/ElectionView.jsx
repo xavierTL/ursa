@@ -68,7 +68,9 @@ class ElectionView extends Component {
                   <Voter
                     electionId={this.props.id}
                     refresh={this.fetchCandidates}
-                    candidates={candidates}
+                    candidates={candidates.map(
+                      cand => (cand = { id: cand[0][1], name: cand[1][1] })
+                    )}
                     drizzle={this.props.drizzle}
                   />
                 </Tab>

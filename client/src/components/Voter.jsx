@@ -1,21 +1,28 @@
 import React, { Component } from 'react';
-import { Button, Alert, ListGroup, ListGroupItem } from 'react-bootstrap';
+import {
+  Button,
+  Alert,
+  ListGroup,
+  ListGroupItem,
+  Modal
+} from 'react-bootstrap';
 
 class Voter extends Component {
   state = {
     voted: false,
-    selection: ''
+    candidate: { id: 0, name: null },
+    showModal: false
   };
   render() {
-    const { voted } = this.state;
+    const { voted, candidate } = this.state;
     const { candidates } = this.props;
     return (
       <>
         <ListGroup>
           {candidates.map((cand, i) => (
             <ListGroupItem key={i}>
-              {cand[1][1]}
-              <Button key={i} onClick={() => console.log(cand)}>
+              {cand.name}
+              <Button key={i} onClick={() => this.selectCandidate(cand)}>
                 Select
               </Button>
             </ListGroupItem>
@@ -23,7 +30,26 @@ class Voter extends Component {
         </ListGroup>
         {!voted ? (
           <>
-            <Button onClick={() => this.castVote()}>Submit Vote</Button>
+            <h2>
+              {candidate.name
+                ? `Your candidate: ${candidate.name}`
+                : 'Please select a candidate.'}
+            </h2>
+            <Button onClick={() => this.toggleModal()}>Vote</Button>
+
+            <Modal show={this.state.showModal} onHide={this.toggleModal}>
+              <Modal.Header closeButton>
+                <Modal.Title>Submit your vote</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                This will cost a small non-refundable amount.
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="primary" onClick={() => this.castVote()}>
+                  {`Submit vote for ${candidate.name}`}
+                </Button>
+              </Modal.Footer>
+            </Modal>
           </>
         ) : (
           <Alert bsStyle="success">
@@ -38,9 +64,17 @@ class Voter extends Component {
     // this.castVote();
   }
 
-  castVote = async candId => {
-    const { methods } = this.props.drizzle.contracts.ElectionManager;
-    const { electionId, refresh } = this.props;
+  selectCandidate = candidate => {
+    this.setState({ candidate });
+  };
+
+  castVote = async () => {
+    console.log('lets vote');
+  };
+
+  toggleModal = () => {
+    const { showModal } = this.state;
+    this.setState({ showModal: !showModal });
   };
 }
 
