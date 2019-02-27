@@ -49,7 +49,7 @@ class ElectionView extends Component {
             {status === 'closed' && (
               <Alert bsStyle="danger">{`Election closed at ${end}`}</Alert>
             )}
-            <Tabs defaultActiveKey={1} id="uncontrolled-tab-example">
+            <Tabs defaultActiveKey={2} id="uncontrolled-tab-example">
               <Tab eventKey={1} title="Candidates">
                 <ReviewTable
                   data="Current Candidates"
@@ -59,6 +59,7 @@ class ElectionView extends Component {
                   <AddElectionCandidates
                     electionId={this.props.id}
                     drizzle={this.props.drizzle}
+                    refreshCandidates={this.fetchCandidates}
                   />
                 )}
               </Tab>

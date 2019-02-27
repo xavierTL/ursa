@@ -79,7 +79,10 @@ class AddElectionCandidates extends Component {
         methods.addNewCandidate(electionId, newCandidates[i]).send()
       );
     }
-    Promise.all(promiseArray);
+    Promise.all(promiseArray).then(() => {
+      this.props.refreshCandidates();
+      this.setState({ newCandidates: [] });
+    });
   };
 }
 
