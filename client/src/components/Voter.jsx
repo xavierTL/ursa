@@ -66,7 +66,13 @@ class Voter extends Component {
     this.setState({ candidate });
   };
 
+  toggleModal = () => {
+    const { showModal } = this.state;
+    this.setState({ showModal: !showModal });
+  };
+
   castVote = async () => {
+    this.toggleModal();
     const { electionId } = this.props;
     const { id } = this.state.candidate;
     const { methods } = this.props.drizzle.contracts.ElectionManager;
@@ -75,16 +81,10 @@ class Voter extends Component {
       await methods
         .voteForCandidate(id, electionId)
         .send()
-        .then(console.log);
+        .then(tx => {});
     } catch (err) {
-      console.log(err);
+      alert(err);
     }
-    this.toggleModal();
-  };
-
-  toggleModal = () => {
-    const { showModal } = this.state;
-    this.setState({ showModal: !showModal });
   };
 }
 
