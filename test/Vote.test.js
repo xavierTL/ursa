@@ -165,8 +165,19 @@ contract('ElectionManager', accounts => {
   });
 
   describe('registerVoter', () => {
-    it('adds voter address to election whitelist', async () => {
-      await instance.startElection('Test Election Four', 300, 800, [
+    it('admin cannot be registered', async () => {
+      try {
+        await instance.startElection('Test Election Four', 300, 800, [
+          accounts[0],
+          accounts[2],
+          accounts[3]
+        ]);
+      } catch (error) {
+        expect(error.reason).to.eql('Admin cannot be added to registry.');
+      }
+    });
+    it('adds voter address to election registry', async () => {
+      await instance.startElection('Test Election Five', 300, 800, [
         accounts[1],
         accounts[2],
         accounts[3]
@@ -187,12 +198,12 @@ contract('ElectionManager', accounts => {
         });
       } catch (error) {
         expect(error.reason).to.eql(
-          "Only admin can add voters to this election's whitelist."
+          "Only admin can add voters to this election's registry."
         );
       }
     });
     it('voters cannot be added after start time', async () => {
-      await instance.startElection('Test Election Five', 0, 800, [
+      await instance.startElection('Test Election Six', 0, 800, [
         accounts[1],
         accounts[2],
         accounts[3]
