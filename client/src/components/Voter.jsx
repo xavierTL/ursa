@@ -60,16 +60,26 @@ class Voter extends Component {
     );
   }
 
-  componentDidMount() {
-    // this.castVote();
-  }
+  componentDidMount() {}
 
   selectCandidate = candidate => {
     this.setState({ candidate });
   };
 
   castVote = async () => {
-    console.log('lets vote');
+    const { electionId } = this.props;
+    const { id } = this.state.candidate;
+    const { methods } = this.props.drizzle.contracts.ElectionManager;
+    try {
+      console.log(id, electionId);
+      await methods
+        .voteForCandidate(id, electionId)
+        .send()
+        .then(console.log);
+    } catch (err) {
+      console.log(err);
+    }
+    this.toggleModal();
   };
 
   toggleModal = () => {
