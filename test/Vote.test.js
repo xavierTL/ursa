@@ -110,6 +110,7 @@ contract('ElectionManager', accounts => {
           'Only admin can add candidates to this election.'
         );
       }
+      // checking that a new candidate has not been added to election.
       const newBadCandidate = await instance.getCandidate(3);
       const updatedElectionCandidates = await instance.getElectionCandidates(1);
       expect(newBadCandidate['0'].toNumber()).to.equal(0);
@@ -117,6 +118,7 @@ contract('ElectionManager', accounts => {
       expect(newBadCandidate['2'].toNumber()).to.equal(0);
       expect(updatedElectionCandidates.length).to.eql(2);
     });
+    // no test for adding candidate before election starts.
   });
 
   describe('voteForCandidate', () => {
@@ -139,7 +141,8 @@ contract('ElectionManager', accounts => {
       expect(voteCount.toNumber()).to.equal(1);
     });
     it('cannot vote after the election has ended', async () => {
-      await instance.startElection('Test Election Two', 0, -100, [
+      // election with an end date that has already passed.
+      await instance.startElection('Two', 0, -100, [
         accounts[1],
         accounts[2],
         accounts[3]
@@ -151,7 +154,8 @@ contract('ElectionManager', accounts => {
       }
     });
     it('cannot vote before the election has started', async () => {
-      await instance.startElection('Test Election Three', 2000, 4000, [
+      // election with a start date one day from now, end date two days from now.
+      await instance.startElection('Three', 86400, 172800, [
         accounts[1],
         accounts[2],
         accounts[3]
@@ -162,12 +166,27 @@ contract('ElectionManager', accounts => {
         expect(error.reason).to.eql('The election has not started yet.');
       }
     });
+    it('A registered voter can only vote once', async () => {
+      // election with one voter who has not been added to other test elections.
+      await instance.startElection('Four', 0, 10000000, [accounts[8]]);
+      try {
+        await instance.voteForCandidate(5, 4, { from: accounts[8] });
+      } catch (error) {
+        console.log(error);
+      }
+      try {
+        await instance.voteForCandidate(5, 4, { from: accounts[8] });
+      } catch (error) {
+        console.log(error);
+        expect(error.reason).to.eql('you have already voted.');
+      }
+    });
   });
 
   describe('registerVoter', () => {
     it('admin cannot be registered', async () => {
       try {
-        await instance.startElection('Test Election Four', 300, 800, [
+        await instance.startElection('Test Election Five', 300, 800, [
           accounts[0],
           accounts[2],
           accounts[3]
@@ -182,8 +201,8 @@ contract('ElectionManager', accounts => {
         accounts[2],
         accounts[3]
       ]);
-      await instance.registerVoter(4, accounts[4]);
-      const whiteList = await instance.getRegistry(4);
+      await instance.registerVoter(5, accounts[4]);
+      const whiteList = await instance.getRegistry(5);
       expect(whiteList.length).to.eql(4);
       expect(whiteList[3]).to.eql(accounts[4]);
     });
@@ -193,7 +212,7 @@ contract('ElectionManager', accounts => {
     });
     it('only allows election creator to add new voter addresses to whitelist', async () => {
       try {
-        await instance.registerVoter(1, accounts[5], {
+        await instance.registerVoter(5, accounts[5], {
           from: accounts[1]
         });
       } catch (error) {

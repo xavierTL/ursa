@@ -57,6 +57,9 @@ contract ElectionManager is ERC20 {
 
     function addNewCandidate(uint electionId, string memory newCandidateName) public   {
         require(msg.sender == elections[electionId].creator, "Only admin can add candidates to this election.");
+
+        // require(elections[electionId].startTime >= block.timestamp, "New candidates must be added before voting opens.");
+
         candidatesCount++;
         candidateIds.push(candidatesCount);
         candidateStorage[candidatesCount] = Candidate(
@@ -93,7 +96,7 @@ contract ElectionManager is ERC20 {
         mint(1);
         distributeToken(voter);
     }
-    
+     
     function mint(uint _tokens) private {
         _mint(msg.sender, _tokens);
     }
